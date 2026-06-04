@@ -1,318 +1,364 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TradingView Clone - Pro Interface</title>
-  <script src="https://cdn.jsdelivr.net/npm/klinecharts/dist/klinecharts.min.js"></script>
-  <style>
-    :root {
-      --bg-color: #131722;
-      --panel-bg: #1e222d;
-      --border-color: #2a2e39;
-      --text-active: #d1d4dc;
-      --text-muted: #787b86;
-      --accent: #2962ff;
-      --accent-hover: #1e53e5;
-      --up-color: #089981;
-      --down-color: #f23645;
-      --hover-bg: #2a2e39;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAUUSD Backtest Platform</title>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
+<style>
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-active);
-      font-family: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,Tahoma,sans-serif;
+}
 
-    /* Top Toolbar */
-    .tv-top-toolbar {
-      height: 40px;
-      min-height: 40px;
-      background-color: var(--panel-bg);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 16px;
-      font-size: 14px;
-      font-weight: 500;
-    }
+body{
+    overflow:hidden;
+    background:#ffffff;
+}
 
-    .tv-divider {
-      width: 1px;
-      height: 24px;
-      background-color: var(--border-color);
-    }
+/* ==========================
+   TOP HEADER
+========================== */
 
-    .tv-symbol {
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
+.top-header{
+    height:56px;
+    border-bottom:1px solid #e5e5e5;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+}
 
-    .tv-symbol:hover { color: #fff; }
+.header-left,
+.header-center,
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
 
-    .tv-timeframes {
-      display: flex;
-      gap: 4px;
-    }
+.avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#d9d9d9;
+}
 
-    .tv-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 13px;
-      transition: all 0.1s ease;
-    }
+.btn{
+    height:34px;
+    padding:0 14px;
+    border-radius:8px;
+    border:1px solid #dcdcdc;
+    background:#fff;
+    cursor:pointer;
+}
 
-    .tv-btn:hover {
-      color: var(--text-active);
-      background-color: var(--hover-bg);
-    }
+/* ==========================
+   MAIN LAYOUT
+========================== */
 
-    .tv-btn.active {
-      color: var(--accent);
-    }
+.main-layout{
+    height:calc(100vh - 56px - 34px);
+    display:flex;
+}
 
-    /* Main Container */
-    .tv-main-container {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 40px);
-    }
+/* ==========================
+   LEFT TOOLBAR
+========================== */
 
-    /* Left Toolbar */
-    .tv-left-toolbar {
-      width: 52px;
-      min-width: 52px;
-      background-color: var(--panel-bg);
-      border-right: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 8px 0;
-      gap: 6px;
-    }
+.left-toolbar{
+    width:60px;
+    border-left:1px solid #e5e5e5;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:12px;
+    gap:14px;
+}
 
-    .tv-tool-icon {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 4px;
-      cursor: pointer;
-      color: var(--text-muted);
-      font-size: 16px;
-    }
+.tool{
+    width:28px;
+    height:28px;
+    border-radius:4px;
+    border:1px solid #dcdcdc;
+}
 
-    .tv-tool-icon:hover {
-      background-color: var(--hover-bg);
-      color: var(--text-active);
-    }
+/* ==========================
+   CHART SECTION
+========================== */
 
-    .tv-tool-icon.active {
-      color: var(--accent);
-      background-color: rgba(41, 98, 255, 0.1);
-    }
+.chart-wrapper{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
 
-    .tv-tool-icon svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
+/* timeframe bar */
 
-    /* Chart Container */
-    .tv-chart-wrapper {
-      flex: 1;
-      position: relative;
-      background-color: var(--bg-color);
-    }
+.timeframe-bar{
+    height:44px;
+    border-bottom:1px solid #ececec;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 18px;
+    background:#fff;
+}
 
-    #tv_chart_engine {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+.timeframe{
+    font-size:14px;
+    color:#333;
+}
+
+/* drawing toolbar */
+
+.drawing-bar{
+    height:48px;
+    border-bottom:1px solid #ececec;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 16px;
+    background:#fff;
+}
+
+.draw-btn{
+    width:26px;
+    height:26px;
+    border:1px solid #d8d8d8;
+}
+
+/* chart */
+
+.chart-area{
+    flex:1;
+    position:relative;
+    background:#ffffff;
+}
+
+/* price scale */
+
+.price-scale{
+    position:absolute;
+    right:0;
+    top:0;
+    width:72px;
+    height:100%;
+    border-right:1px solid #ececec;
+    background:#fff;
+}
+
+.price-level{
+    position:absolute;
+    right:8px;
+    font-size:12px;
+    color:#666;
+}
+
+/* ==========================
+   WATCHLIST
+========================== */
+
+.watchlist{
+    width:260px;
+    border-right:1px solid #e5e5e5;
+    background:#fafafa;
+    display:flex;
+    flex-direction:column;
+}
+
+.watch-header{
+    height:50px;
+    border-bottom:1px solid #e5e5e5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+}
+
+.watch-row{
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    border-bottom:1px solid #f0f0f0;
+    font-size:14px;
+}
+
+/* ==========================
+   RIGHT SIDEBAR
+========================== */
+
+.right-sidebar{
+    width:60px;
+    border-right:1px solid #e5e5e5;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+    padding-top:14px;
+}
+
+.side-icon{
+    width:28px;
+    height:28px;
+    border:1px solid #d8d8d8;
+    border-radius:4px;
+}
+
+/* ==========================
+   FOOTER
+========================== */
+
+.footer{
+    height:34px;
+    border-top:1px solid #e5e5e5;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 12px;
+    font-size:13px;
+}
+
+</style>
 </head>
+
 <body>
 
-  <div class="tv-top-toolbar">
-    <div class="tv-symbol">XAUUSD</div>
-    <div class="tv-divider"></div>
-    <div class="tv-timeframes">
-      <button class="tv-btn">1m</button>
-      <button class="tv-btn">5m</button>
-      <button class="tv-btn active">15m</button>
-      <button class="tv-btn">1h</button>
-      <button class="tv-btn">4h</button>
-      <button class="tv-btn">D</button>
-    </div>
-    <div class="tv-divider"></div>
-    <button class="tv-btn">Indicators</button>
-    <button class="tv-btn">Alert</button>
-    <button class="tv-btn">Replay</button>
-    <div style="flex:1;"></div>
-    <button class="tv-btn">⚙️</button>
-    <button class="tv-btn">⛶</button>
-  </div>
+<header class="top-header">
 
-  <div class="tv-main-container">
-    <div class="tv-left-toolbar">
-      <div class="tv-tool-icon active" onclick="setDrawingTool(this, 'pointer')" title="Crosshair">
-        <svg viewBox="0 0 28 28"><path d="M13.5 4.5v20h1v-20h-1zm5 9.5h-20v1h20v-1z"/></svg>
-      </div>
-      <div class="tv-tool-icon" onclick="setDrawingTool(this, 'trendLine')" title="Trend Line">
-        <svg viewBox="0 0 28 28"><path d="M22.12 7.29L6.71 22.71l-1.42-1.42L20.71 5.88l1.41 1.41z"/></svg>
-      </div>
-      <div class="tv-tool-icon" onclick="setDrawingTool(this, 'horizontalLine')" title="Horizontal Line">
-        <svg viewBox="0 0 28 28"><path d="M4 13.5h20v1H4v-1z"/></svg>
-      </div>
-      <div class="tv-tool-icon" onclick="setDrawingTool(this, 'rayLine')" title="Ray">
-        <svg viewBox="0 0 28 28"><path d="M6 14.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm1.5-1h17v1h-17v-1z"/></svg>
-      </div>
-      <div class="tv-tool-icon" onclick="setDrawingTool(this, 'fibonacciRetracement')" title="Fibonacci Retracement">
-        <svg viewBox="0 0 28 28"><path d="M4 8.5h20v1H4v-1zm0 5h20v1H4v-1zm0 5h20v1H4v-1zM9 5.5v16h1v-16H9zm9 0v16h1v-16h-1z"/></svg>
-      </div>
-      <div class="tv-tool-icon" onclick="setDrawingTool(this, 'rect')" title="Rectangle">
-        <svg viewBox="0 0 28 28"><path fill-rule="evenodd" d="M6 7h16v14H6V7zm1 1v12h14V8H7z"/></svg>
-      </div>
-      
-      <div class="tv-divider" style="height: 1px; width: 24px; margin: 4px 0;"></div>
-      
-      <div class="tv-tool-icon" onclick="chartEngine.removeOverlay()" title="Remove Drawings" style="color: var(--down-color);">
-        <svg viewBox="0 0 28 28"><path d="M10 6.5h8V5h-8v1.5zM8.5 7h11l-.7 15H9.2l-.7-15zm-3-.5h17v1h-17v-1z"/></svg>
-      </div>
+    <div class="header-right">
+        <div class="avatar"></div>
+        <button class="btn">نشر</button>
+        <button class="btn">تداول</button>
     </div>
 
-    <div class="tv-chart-wrapper">
-      <div id="tv_chart_engine"></div>
+    <div class="header-center">
+        <strong>XAUUSD</strong>
+        <span>4477.620</span>
+        <span style="color:#00aa66">0.96%</span>
     </div>
-  </div>
 
-  <script>
-    let chartEngine;
+    <div class="header-left">
+        <button class="btn">📷</button>
+        <button class="btn">⚙</button>
+    </div>
 
-    // توليد بيانات هيكلية لتعبئة الشارت
-    function generateMarketData() {
-      const data = [];
-      let price = 2320.0;
-      let timestamp = Date.now() - 200 * 15 * 60 * 1000;
-      
-      for (let i = 0; i < 200; i++) {
-        const volatility = (Math.random() - 0.5) * 8;
-        const open = price;
-        const close = price + volatility;
-        const high = Math.max(open, close) + Math.random() * 4;
-        const low = Math.min(open, close) - Math.random() * 4;
-        
-        data.push({ timestamp, open, high, low, close, volume: Math.random() * 1000 });
-        price = close;
-        timestamp += 15 * 60 * 1000;
-      }
-      return data;
-    }
+</header>
 
-    function initChart() {
-      // تهيئة المحرك وتطبيق إعدادات بصرية مطابقة لـ TradingView
-      chartEngine = klinecharts.init('tv_chart_engine');
-      
-      chartEngine.setStyles({
-        grid: {
-          show: true,
-          horizontal: { color: '#1e222d', style: 'solid', size: 1 },
-          vertical: { color: '#1e222d', style: 'solid', size: 1 }
-        },
-        candle: {
-          type: 'candle_solid',
-          bar: {
-            upColor: '#089981',
-            downColor: '#f23645',
-            noChangeColor: '#089981',
-            upBorderColor: '#089981',
-            downBorderColor: '#f23645',
-            upWickColor: '#089981',
-            downWickColor: '#f23645'
-          },
-          priceMark: {
-            show: true,
-            high: { show: false },
-            low: { show: false },
-            last: {
-              show: true,
-              upColor: '#089981',
-              downColor: '#f23645',
-              noChangeColor: '#089981',
-              text: { color: '#ffffff' }
-            }
-          }
-        },
-        xAxis: {
-          axisLine: { color: '#2a2e39', size: 1 },
-          tickLine: { color: '#2a2e39', size: 1 },
-          tickText: { color: '#787b86', size: 12 }
-        },
-        yAxis: {
-          axisLine: { color: '#2a2e39', size: 1 },
-          tickLine: { color: '#2a2e39', size: 1 },
-          tickText: { color: '#787b86', size: 12 }
-        },
-        crosshair: {
-          show: true,
-          horizontal: { line: { color: '#787b86', style: 'dashed', size: 1 } },
-          vertical: { line: { color: '#787b86', style: 'dashed', size: 1 } }
-        }
-      });
+<div class="main-layout">
 
-      chartEngine.applyNewData(generateMarketData());
-    }
+    <aside class="right-sidebar">
 
-    // إدارة تفعيل أدوات الرسم
-    function setDrawingTool(element, toolName) {
-      document.querySelectorAll('.tv-tool-icon').forEach(btn => btn.classList.remove('active'));
-      element.classList.add('active');
+        <div class="side-icon"></div>
+        <div class="side-icon"></div>
+        <div class="side-icon"></div>
+        <div class="side-icon"></div>
+        <div class="side-icon"></div>
+        <div class="side-icon"></div>
+        <div class="side-icon"></div>
 
-      if (toolName === 'pointer') {
-        chartEngine.overrideOverlay({ lock: true });
-        return;
-      }
+    </aside>
 
-      chartEngine.createOverlay({
-        name: toolName,
-        lock: false,
-        styles: {
-          line: { color: '#2962ff', size: 2 },
-          polygon: { color: 'rgba(41, 98, 255, 0.2)', border: { color: '#2962ff' } }
-        }
-      });
-    }
+    <section class="watchlist">
 
-    // تعديل الفريم الزمني (مظهري فقط للواجهة)
-    document.querySelectorAll('.tv-timeframes .tv-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.tv-timeframes .tv-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
+        <div class="watch-header">
+            <span>رمز</span>
+            <span>%</span>
+        </div>
 
-    window.onload = initChart;
-    window.addEventListener('resize', () => { chartEngine.resize(); });
-  </script>
+        <div class="watch-row"><span>EURUSD</span><span>0.19%</span></div>
+        <div class="watch-row"><span>GBPUSD</span><span>0.07%</span></div>
+        <div class="watch-row"><span>USDJPY</span><span>-0.06%</span></div>
+        <div class="watch-row"><span>AUDUSD</span><span>0.16%</span></div>
+        <div class="watch-row"><span>USDCAD</span><span>0.03%</span></div>
+        <div class="watch-row"><span>NZDUSD</span><span>0.27%</span></div>
+        <div class="watch-row"><span>XAUUSD</span><span>0.96%</span></div>
+        <div class="watch-row"><span>BTCUSD</span><span>-0.92%</span></div>
+
+    </section>
+
+    <section class="chart-wrapper">
+
+        <div class="timeframe-bar">
+            <span class="timeframe">1 دقيقة</span>
+            <span class="timeframe">3 دقائق</span>
+            <span class="timeframe">5 دقائق</span>
+            <span class="timeframe">15 دقيقة</span>
+            <span class="timeframe">1 ساعة</span>
+            <span class="timeframe">4 ساعات</span>
+            <span class="timeframe">يوم</span>
+            <span class="timeframe">أسبوع</span>
+            <span class="timeframe">شهر</span>
+        </div>
+
+        <div class="drawing-bar">
+
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+            <div class="draw-btn"></div>
+
+        </div>
+
+        <div class="chart-area">
+
+            <div class="price-scale">
+
+                <div class="price-level" style="top:40px;">4516</div>
+                <div class="price-level" style="top:140px;">4511</div>
+                <div class="price-level" style="top:240px;">4506</div>
+                <div class="price-level" style="top:340px;">4501</div>
+                <div class="price-level" style="top:440px;">4496</div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <aside class="left-toolbar">
+
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+        <div class="tool"></div>
+
+    </aside>
+
+</div>
+
+<footer class="footer">
+
+    <span>يوم</span>
+    <span>5 أيام</span>
+    <span>1 شهر</span>
+    <span>3 أشهر</span>
+    <span>6 أشهر</span>
+    <span>YTD</span>
+    <span>1 سنة</span>
+    <span>5 سنوات</span>
+    <span>كل</span>
+
+</footer>
+
 </body>
 </html>
