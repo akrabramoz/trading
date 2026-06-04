@@ -3,69 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>واجهة محاكاة السوق | Backtest & Trading Journal</title>
+<title>مكتبة AK | اختبار ICT — Market Maker Primer</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #050a0f; --surface: #0a1520; --surface2: #0f1e2e;
-  --border: #1a3a5c; --accent: #00d4ff; --accent2: #ff6b35;
-  --gold: #ffd700; --green: #00ff88; --red: #ff4466;
-  --text: #c8dde8; --text-dim: #5a7a8a;
-  --glow: 0 0 20px rgba(0,212,255,0.3);
+:root{
+  --bg:#050a0f;--surface:#0a1520;--surface2:#0f1e2e;
+  --border:#1a3a5c;--accent:#00d4ff;--accent2:#ff6b35;
+  --gold:#ffd700;--green:#00ff88;--red:#ff4466;
+  --text:#c8dde8;--text-dim:#5a7a8a;
+  --glow:0 0 20px rgba(0,212,255,0.3);
 }
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { 
-    background: var(--bg); 
-    color: var(--text); 
-    font-family: 'Cairo', sans-serif; 
-    min-height: 100vh; 
-    overflow-x: hidden; 
-}
-body::before {
-    content: ''; position: fixed; inset: 0;
-    background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px; pointer-events: none; z-index: 0;
-}
+/* ═══════════════════════════════
+   صفحة البيت (الترحيب) — مخفية
+═══════════════════════════════ */
+#page0{display:none;position:relative;z-index:1;min-height:100vh;}
 
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    position: relative;
-    z-index: 1;
-}
+/* ═══════════════════════════════
+   صفحة الاختبار — مخفية
+═══════════════════════════════ */
+#page1{display:none;position:relative;z-index:1;min-height:100vh;}
 
-/* ── Backtest & Journal ── */
-.backtest-card {
-    background: linear-gradient(135deg, #0a1e30, #0f2a40);
-    border: 1px solid rgba(0,212,255,0.3);
-    border-radius: 16px;
-    padding: 26px;
-    margin-top: 20px;
-    position: relative;
-    overflow: hidden;
-}
-.backtest-card::before {
-    content: 'BACKTEST';
-    position: absolute;
-    top: 18px; left: 22px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 11px; letter-spacing: 4px;
-    color: rgba(0,212,255,0.12);
-    font-weight: 700;
-}
-.bt-title { font-size: 17px; font-weight: 900; color: #fff; margin-bottom: 6px; }
-.bt-time {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2);
-    border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--gold);
-    margin-bottom: 22px;
-}
+/* ═══════════════════════════════
+   صفحة النتيجة — مخفية
+═══════════════════════════════ */
+#page2{display:none;position:relative;z-index:1;}
 
-/* شارت الباك تيست المدمج */
+/* ═══════════════════════════════
+   صفحة الدرس — مرئية بشكل أفتراضي
+═══════════════════════════════ */
+#pagelesson{display:block;position:relative;z-index:1;min-height:100vh;}
+
+.lesson-wrap{max-width:960px;margin:0 auto;padding:30px 20px 80px;}
+
+/* رأس الدرس */
+.lesson-header{text-align:center;padding:44px 0 28px;border-bottom:1px solid var(--border);margin-bottom:36px;position:relative;}
+.lesson-header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:120px;height:2px;background:var(--accent);box-shadow:var(--glow);}
+.lesson-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:30px;padding:6px 18px;font-size:12px;color:var(--accent);letter-spacing:1px;}
+.lesson-title{font-size:clamp(18px,3.5vw,28px);font-weight:900;color:#fff;margin-bottom:8px;line-height:1.4;}
+.lesson-subtitle{font-size:13px;color:var(--text-dim);}
+
+/* زر الرجوع */
+.lesson-back-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.25);border-radius:10px;color:var(--accent);font-family:'Cairo',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-bottom:20px;}
+.lesson-back-btn:hover{background:rgba(0,212,255,0.15);box-shadow:0 4px 14px rgba(0,212,255,0.2);}
+
+/* فهرس المحتوى */
+.lesson-toc{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:36px;}
+.lesson-toc-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.toc-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);padding:6px 10px;border-radius:6px;background:var(--surface2);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.toc-item:hover{color:var(--accent);background:rgba(0,212,255,0.06);}
+.toc-num{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--accent);width:20px;flex-shrink:0;}
+
+/* قسم الدرس */
+.lesson-section{margin-bottom:40px;scroll-margin-top:20px;}
+.lesson-section-title{font-size:17px;font-weight:900;color:#fff;margin-bottom:18px;display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.ls-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.3));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ls-icon.orange{background:linear-gradient(135deg,var(--accent2),rgba(255,107,53,0.3));}
+.ls-icon.green{background:linear-gradient(135deg,var(--green),rgba(0,255,136,0.3));}
+
+/* صف نصوص + صورة */
+.lesson-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin-bottom:18px;}
+.lesson-row.full{grid-template-columns:1fr;}
+@media(max-width:640px){.lesson-row{grid-template-columns:1fr;}}
+
+/* صندوق النص */
+.lesson-text-box{font-size:13.5px;color:var(--text-dim);line-height:1.85;}
+.lesson-text-box p{margin-bottom:10px;}
+.lesson-text-box strong{color:var(--text);}
+.lesson-text-box .highlight{color:var(--accent);font-weight:700;}
+.lesson-text-box .highlight-o{color:var(--accent2);font-weight:700;}
+.lesson-text-box .highlight-g{color:var(--green);font-weight:700;}
+
+/* قائمة نقطية */
+.lesson-list{list-style:none;padding:0;margin:0 0 10px 0;}
+.lesson-list li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(26,58,92,0.4);}
+.lesson-list li:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.lesson-list li::before{content:'▸';color:var(--accent);font-size:11px;margin-top:3px;flex-shrink:0;}
+.lesson-list.orange li::before{color:var(--accent2);}
+.lesson-list.green li::before{color:var(--green);}
+
+/* placeholder الصور */
+.img-placeholder{border:1.5px dashed rgba(0,212,255,0.25);border-radius:10px;background:rgba(0,212,255,0.03);padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;}
+.img-placeholder-icon{font-size:28px;margin-bottom:8px;opacity:0.5;}
+.img-placeholder-id{font-family:'Rajdhani',sans-serif;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;}
+.img-placeholder-text{font-size:11px;color:var(--text-dim);line-height:1.6;}
+.img-placeholder img{width:100%;border-radius:8px;display:block;}
+
+/* بطاقة مفهوم */
+.concept-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px;}
+.concept-card.accent-border{border-color:rgba(0,212,255,0.3);}
+.concept-card-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;}
+.concept-card p{font-size:12.5px;color:var(--text-dim);line-height:1.75;margin:0;}
+
+/* مقارنة */
+.compare-lesson{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.compare-col-lesson{padding:14px;border-radius:10px;}
+.compare-col-lesson.retail{background:rgba(255,68,102,0.05);border:1px solid rgba(255,68,102,0.2);}
+.compare-col-lesson.inst{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);}
+.compare-col-lesson h4{font-size:12px;font-weight:700;margin-bottom:10px;}
+.compare-col-lesson.retail h4{color:var(--red);}
+.compare-col-lesson.inst h4{color:var(--green);}
+.compare-col-lesson ul{list-style:none;padding:0;margin:0;}
+.compare-col-lesson ul li{font-size:12px;color:var(--text-dim);line-height:1.7;padding-bottom:5px;}
+
+/* صندوق تطبيق عملي */
+.practical-box{background:linear-gradient(135deg,#0a1e30,#0f2a40);border:1px solid rgba(255,215,0,0.25);border-radius:14px;padding:20px 22px;margin-bottom:16px;}
+.practical-box-title{font-size:13px;font-weight:900;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.practical-box p{font-size:12.5px;color:var(--text-dim);line-height:1.8;margin-bottom:8px;}
+
+/* شارة مفتاحية */
+.key-insight{background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-right:3px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0;font-size:13px;color:var(--text-dim);line-height:1.7;}
+.key-insight.orange{background:rgba(255,107,53,0.06);border-color:rgba(255,107,53,0.2);border-right-color:var(--accent2);}
+.key-insight.green{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2);border-right-color:var(--green);}
+
+/* قائمة المفاهيم في الهيدر */
+.concepts-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+.concept-tag{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.18);border-radius:6px;padding:5px 12px;font-size:11px;color:var(--accent);}
+.concept-tag.orange{background:rgba(255,107,53,0.08);border-color:rgba(255,107,53,0.18);color:var(--accent2);}
+
+/* ═══════════════════════════════
+   شارت الباك تيست المدمج
+═══════════════════════════════ */
+
 .bt-chart-wrapper {
   margin-top: 22px;
   border-radius: 14px;
@@ -74,201 +139,423 @@ body::before {
   background: #050a0f;
   position: relative;
 }
+
 .bt-chart-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; background: rgba(10,21,32,0.97);
-  border-bottom: 1px solid rgba(26,58,92,0.7); flex-wrap: wrap; gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(10,21,32,0.97);
+  border-bottom: 1px solid rgba(26,58,92,0.7);
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .bt-symbol-row {
-  display: flex; align-items: center; gap: 8px;
-  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px; color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
 }
 .bt-tf-badge {
-  font-size: 10px; padding: 2px 8px; background: rgba(0,212,255,0.1);
-  border: 1px solid rgba(0,212,255,0.25); border-radius: 4px; color: var(--accent);
+  font-size: 10px;
+  padding: 2px 8px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 4px;
+  color: var(--accent);
 }
 .bt-ohlc-row {
-  display: flex; gap: 12px; font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; color: var(--text-dim); flex-wrap: wrap;
+  display: flex;
+  gap: 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
 }
 .bt-ohlc-row .up  { color: var(--green); font-weight: 700; }
 .bt-ohlc-row .dn  { color: var(--red);   font-weight: 700; }
 .bt-ohlc-row .val { color: var(--text);  font-weight: 600; }
 
 #btChartEl {
-  width: 100%; height: 380px; position: relative; background: #050a0f;
+  width: 100%;
+  height: 320px;
+  position: relative;
+  background: #050a0f;
 }
 
 .bt-csv-row {
-  display: flex; align-items: center; gap: 10px; padding: 9px 16px;
-  background: rgba(10,21,32,0.6); border-top: 1px solid rgba(26,58,92,0.4); flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  background: rgba(10,21,32,0.6);
+  border-top: 1px solid rgba(26,58,92,0.4);
+  flex-wrap: wrap;
 }
-.bt-csv-lbl { font-size: 12px; color: var(--text-dim); }
+.bt-csv-lbl {
+  font-size: 12px;
+  color: var(--text-dim);
+}
 .bt-csv-btn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px;
-  background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.3);
-  border-radius: 7px; color: var(--accent); font-size: 12px;
-  font-family: 'Cairo', sans-serif; cursor: pointer; transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 7px;
+  color: var(--accent);
+  font-size: 12px;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 .bt-csv-btn:hover { background: rgba(0,212,255,0.16); }
-.bt-csv-status { font-size: 11px; color: var(--text-dim); }
-.bt-csv-status.ok  { color: var(--green); }
-.bt-csv-status.err { color: var(--red); }
 
 .bt-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; background: rgba(10,21,32,0.97);
-  border-top: 1px solid rgba(26,58,92,0.6); gap: 12px; flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(10,21,32,0.97);
+  border-top: 1px solid rgba(26,58,92,0.6);
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .bt-controls { display: flex; align-items: center; gap: 6px; }
+
 .bt-btn {
-  width: 34px; height: 34px; border-radius: 7px; border: 1px solid rgba(26,58,92,0.9);
-  background: rgba(15,30,46,0.9); color: var(--text); font-size: 13px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s; font-family: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  border: 1px solid rgba(26,58,92,0.9);
+  background: rgba(15,30,46,0.9);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
 }
 .bt-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.08); }
-.bt-btn.bt-play-btn { width: 42px; height: 42px; border-radius: 9px; font-size: 16px; border-color: rgba(0,212,255,0.5); }
-.bt-btn.playing { background: rgba(255,68,102,0.12); border-color: var(--red); color: var(--red); }
-.bt-speed-lbl { font-family: 'Rajdhani', sans-serif; font-size: 13px; color: var(--gold); min-width: 36px; text-align: center; }
+.bt-btn:disabled { opacity: 0.28; cursor: not-allowed; }
 
 .bt-prog-wrap { flex: 1; min-width: 100px; }
-.bt-prog-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; cursor: pointer; position: relative; }
-.bt-prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 99px; transition: width 0.15s; pointer-events: none; }
-.bt-prog-lbl { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: var(--text-dim); margin-top: 4px; text-align: center; }
-
-/* منطقة تسجيل الملاحظات (Journal) */
-.journal-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 26px;
-    margin-top: 22px;
-    position: relative;
+.bt-prog-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  cursor: pointer;
 }
-.journal-card::before { content: '📔'; position: absolute; top: -13px; right: 22px; font-size: 22px; }
+.bt-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 99px;
+  transition: width 0.15s;
+}
+
 .bt-notes-section {
+  margin-top: 20px;
   background: rgba(10,21,32,0.6);
   border: 1px solid rgba(26,58,92,0.7);
   border-radius: 12px;
   overflow: hidden;
 }
 .bt-notes-header {
-  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
-  background: rgba(0,212,255,0.04); border-bottom: 1px solid rgba(26,58,92,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(0,212,255,0.04);
+  border-bottom: 1px solid rgba(26,58,92,0.5);
 }
 .bt-notes-header h4 { font-size: 14px; font-weight: 700; color: #fff; }
-.bt-notes-header p  { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-.bt-notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-@media(max-width:600px){ .bt-notes-grid{ grid-template-columns:1fr; } }
-.bt-note-field { padding: 14px 16px; border-left: 1px solid rgba(26,58,92,0.5); }
+.bt-notes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+@media(max-width:600px){ 
+  .bt-notes-grid{ grid-template-columns:1fr; }
+  .compare-lesson{grid-template-columns:1fr;}
+}
+
+.bt-note-field {
+  padding: 14px 16px;
+  border-left: 1px solid rgba(26,58,92,0.5);
+}
 .bt-note-field:nth-child(odd) { border-left: none; }
-.bt-note-label {
-  font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px;
-  text-transform: uppercase; margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
-}
+
 .bt-note-input {
-  width: 100%; background: rgba(5,10,15,0.7); border: 1px solid rgba(26,58,92,0.6);
-  border-radius: 8px; color: var(--text); font-family: 'Cairo', sans-serif;
-  font-size: 13px; padding: 9px 12px; resize: vertical; min-height: 72px;
-  transition: border-color 0.2s; direction: rtl;
+  width: 100%;
+  background: rgba(5,10,15,0.7);
+  border: 1px solid rgba(26,58,92,0.6);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  min-height: 72px;
+  direction: rtl;
 }
-.bt-note-input:focus { outline: none; border-color: rgba(0,212,255,0.4); background: rgba(5,10,15,0.9); }
-.bt-note-input::placeholder { color: var(--text-dim); font-size: 12px; }
-.bt-notes-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; border-top: 1px solid rgba(26,58,92,0.4); gap: 10px; flex-wrap: wrap;
+.bt-note-input:focus {
+  outline: none;
+  border-color: rgba(0,212,255,0.4);
 }
-.bt-notes-footer p { font-size: 11px; color: var(--text-dim); line-height: 1.6; flex: 1; }
+
 .bt-save-btn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
   background: linear-gradient(135deg, rgba(0,255,136,0.12), rgba(0,212,255,0.06));
-  border: 1px solid rgba(0,255,136,0.3); border-radius: 8px; color: var(--green);
-  font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  border: 1px solid rgba(0,255,136,0.3);
+  border-radius: 8px;
+  color: var(--green);
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.bt-save-btn:hover { background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,212,255,0.1)); box-shadow: 0 3px 14px rgba(0,255,136,0.2); }
+.bt-save-btn:hover { background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,212,255,0.1)); }
+
 </style>
 </head>
 <body>
+<canvas id="particles"></canvas>
 
-<div class="container">
+<!-- ═══════════════════════════════
+     صفحة الدرس المحسن — عرض أول
+═══════════════════════════════ -->
+<div id="pagelesson">
+<div class="lesson-wrap">
+
+  <!-- زر الرجوع -->
+  <button class="lesson-back-btn" onclick="window.location.href='#'">
+    → العودة للصفحة الرئيسية
+  </button>
+
+  <!-- رأس الدرس -->
+  <div class="lesson-header">
+    <div class="lesson-badge">📘 مكتبة AK · Market Maker Primer Course · ICT</div>
+    <div class="lesson-title">ما الذي يجب على المتداولين الجدد التركيز عليه</div>
+    <div class="lesson-subtitle">ملخص محسن ومكتمل للحلقة الأولى — الحلقة النصية الكاملة + الملاحظات الرسمية</div>
+    <div class="concepts-list">
+      <span class="concept-tag">🎯 نظرية صيد السيولة</span>
+      <span class="concept-tag">📍 مناطق السيولة</span>
+      <span class="concept-tag orange">🧱 بلوك الأوامر</span>
+      <span class="concept-tag orange">🎯 دخول عالي الدقة</span>
+      <span class="concept-tag">📉 Zero Drawdown</span>
+      <span class="concept-tag">📊 Scaling Profits</span>
+    </div>
+  </div>
+
+  <!-- فهرس المحتوى -->
+  <div class="lesson-toc">
+    <div class="lesson-toc-title">📋 محتويات الدرس</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#ls-01"><span class="toc-num">01</span>لماذا هذه الدروس؟</a>
+      <a class="toc-item" href="#ls-02"><span class="toc-num">02</span>من يستفيد أكثر؟</a>
+      <a class="toc-item" href="#ls-03"><span class="toc-num">03</span>السعر فركتلي</a>
+      <a class="toc-item" href="#ls-04"><span class="toc-num">04</span>ما الذي يحرك السعر؟</a>
+    </div>
+  </div>
+
+  <!-- القسم 1: لماذا هذه الدروس؟ -->
+  <div class="lesson-section" id="ls-01">
+    <div class="lesson-section-title">
+      <div class="ls-icon">💡</div>
+      <span>01 — لماذا هذه الدروس؟ — نظرة ICT الشخصية</span>
+    </div>
+    <div class="lesson-row">
+      <div class="lesson-text-box">
+        <p>هذه الدروس صُممت لتكون <strong>أقصر وأكثر تركيزاً وأكثر كثافة</strong> بالمحتوى مقارنة بدروس ICT القديمة، مع الحفاظ على الدقة والعمق.</p>
+        <p>ICT نفسه كان متداولاً في <span class="highlight">الأسهم والسندات والسلع وعقود العملات الآجلة (Futures)</span> لأكثر من عشرين سنة قبل أن يعلم الفوركس.</p>
+        <ul class="lesson-list">
+          <li>السوق يعمل <strong>24 ساعة</strong> — وهذا يشبه متجر حلوى مفتوح طوال اليوم!</li>
+          <li>سيولة عالية جداً وحركة سعر سريعة</li>
+          <li>يمنح فرصاً للتداول اليومي والسكالبينج والسوينج والبوزيشن تريدينج</li>
+        </ul>
+        <div class="key-insight">
+          💬 <em>"تعلمت من أخطائي على مدار السنوات، وهذه الفيديوهات ستساعدك على تجنب كثير من المزالق التي وقعت فيها."</em>
+        </div>
+      </div>
+      <div class="img-placeholder" id="img-01">
+        <div class="img-placeholder-icon">🖼️</div>
+        <div class="img-placeholder-id">IMG-01</div>
+        <div class="img-placeholder-text">صورة: نظرة عامة على سوق الفوركس</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- القسم 2: من يستفيد أكثر؟ -->
+  <div class="lesson-section" id="ls-02">
+    <div class="lesson-section-title">
+      <div class="ls-icon orange">🧠</div>
+      <span>02 — من يستفيد أكثر من تعلم ICT؟</span>
+    </div>
+    <div class="lesson-row">
+      <div class="lesson-text-box">
+        <p>هنا مفاجأة قد تكون صادمة: <span class="highlight-o">المبتدئ تماماً بدون أي خلفية تقليدية يمتلك ميزة واضحة</span> على من تعلموا الطرق القديمة.</p>
+        <p><strong>لماذا؟</strong> لأن ICT يتعارض تماماً مع:</p>
+        <ul class="lesson-list orange">
+          <li><span class="highlight-r">موجات إليوت (Elliott Waves)</span> — تُشتت انتباهك</li>
+          <li><span class="highlight-r">العرض والطلب (Supply & Demand)</span> — مفهوم مختلف تماماً</li>
+          <li><span class="highlight-r">الهارمونيك (Harmonic Patterns)</span> — نماذج معقدة</li>
+        </ul>
+        <div class="key-insight orange">
+          ⚠️ <strong>تحذير:</strong> إذا كنت قد تعلمت أياً من المدارس أعلاه، ستواجه صعوبة في إعادة برمجة تفكيرك.
+        </div>
+      </div>
+      <div class="img-placeholder" id="img-02">
+        <div class="img-placeholder-icon">🖼️</div>
+        <div class="img-placeholder-id">IMG-02</div>
+        <div class="img-placeholder-text">صورة: شارت نظيف بدون مؤشرات</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- القسم 3: السعر فركتلي -->
+  <div class="lesson-section" id="ls-03">
+    <div class="lesson-section-title">
+      <div class="ls-icon">🔄</div>
+      <span>03 — السعر ذو طبيعة فركتلية (Fractal)</span>
+    </div>
+    <div class="lesson-row">
+      <div class="lesson-text-box">
+        <p>مفهوم أساسي يجب استيعابه جيداً: <span class="highlight">السعر فركتلي</span>، بمعنى أن:</p>
+        <ul class="lesson-list">
+          <li>ما تراه على إطار زمني معين، <strong>يمكن رؤيته بنفس الشكل</strong> على الأطر الأعلى والأدنى</li>
+          <li>نفس نوع التكوين (Formation) أو الإعداد (Setup) يتكرر على كل إطار زمني</li>
+          <li>الأطر الزمنية المختلفة لا تعني قواعد مختلفة — المبادئ واحدة</li>
+        </ul>
+        <div class="key-insight green">
+          ✅ <strong>الفائدة العملية:</strong> يمكنك التدرب والدراسة على إطار <span class="highlight-g">M15</span> وستجد نفس الظواهر على H4 وDaily معاً
+        </div>
+      </div>
+      <div class="img-placeholder" id="img-03">
+        <div class="img-placeholder-icon">🖼️</div>
+        <div class="img-placeholder-id">IMG-03</div>
+        <div class="img-placeholder-text">صورة: نفس النمط السعري على أطر زمنية مختلفة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- القسم 4: ما الذي يحرك السعر؟ -->
+  <div class="lesson-section" id="ls-04">
+    <div class="lesson-section-title">
+      <div class="ls-icon green">📊</div>
+      <span>04 — ما الذي يحرك السعر؟</span>
+    </div>
+    <div class="lesson-row full">
+      <div class="lesson-text-box">
+        <p>في نهاية المطاف، <span class="highlight-g">السعر يحركه المال فقط</span> — أموال البشر المختلفة تشتري أو تبيع.</p>
+        <p>المؤسسات المالية الكبيرة (البنوك، صناديق التحوط، شركات التأمين) لديها مليارات الدولارات. عندما تريد الدخول في صفقة كبيرة، لا تستطيع أن تقتل السوق فوراً — لذا تحتاج إلى جذب السيولة أولاً.</p>
+        
+        <div class="concept-card accent-border">
+          <div class="concept-card-title">🎯 مفهوم أساسي: صيد السيولة</div>
+          <p>المؤسسات <strong>تنتظر</strong> في مناطق معينة (مستويات الدعم والمقاومة التاريخية) لتجذب المتداولين الصغار (التجزئة)، ثم تتحرك في اتجاه معاكس لتصفية المتوقفات (Stop Losses) وتحقيق أرباح كبيرة.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- شارت الباك تيست -->
+  <div class="lesson-section">
+    <div class="lesson-section-title">
+      <div class="ls-icon">📈</div>
+      <span>الباك تيست التفاعلي</span>
+    </div>
     
-    <!-- 1. واجهة الباك تيست -->
-    <div class="backtest-card">
-        <h2 class="bt-title">محاكاة السوق (Market Replay)</h2>
-        <div class="bt-time">التدريب العملي وبناء السيكولوجية</div>
-
-        <div class="bt-chart-wrapper">
-            <!-- الهيدر الخاص بالشارت -->
-            <div class="bt-chart-header">
-                <div class="bt-symbol-row">
-                    <span>XAUUSD</span>
-                    <span class="bt-tf-badge">M15</span>
-                </div>
-                <div class="bt-ohlc-row">
-                    <span class="up">O: <span class="val">1920.50</span></span>
-                    <span class="up">H: <span class="val">1925.00</span></span>
-                    <span class="dn">L: <span class="val">1918.20</span></span>
-                    <span class="dn">C: <span class="val">1923.80</span></span>
-                </div>
-            </div>
-
-            <!-- الكانفاس (مكان رسم الشموع) -->
-            <canvas id="btChartEl"></canvas>
-
-            <!-- شريط رفع البيانات -->
-            <div class="bt-csv-row">
-                <span class="bt-csv-lbl">مصدر البيانات:</span>
-                <button class="bt-csv-btn">📂 رفع ملف CSV</button>
-                <span class="bt-csv-status ok">متصل ببيانات السيولة</span>
-            </div>
-
-            <!-- شريط التحكم بالشارت -->
-            <div class="bt-toolbar">
-                <div class="bt-controls">
-                    <button class="bt-btn" title="شمعة للخلف">⏮</button>
-                    <button class="bt-btn bt-play-btn" title="تشغيل المحاكاة">▶</button>
-                    <button class="bt-btn" title="شمعة للأمام">⏭</button>
-                    <span class="bt-speed-lbl">1x</span>
-                </div>
-                <div class="bt-prog-wrap">
-                    <div class="bt-prog-track">
-                        <div class="bt-prog-fill" style="width: 35%;"></div>
-                    </div>
-                    <div class="bt-prog-lbl">شمعة 35 من 100</div>
-                </div>
-            </div>
+    <div class="bt-chart-wrapper">
+      <div class="bt-chart-header">
+        <div class="bt-symbol-row">
+          <span>EURUSD</span>
+          <span class="bt-tf-badge">H1</span>
         </div>
+        <div class="bt-ohlc-row">
+          <span>O: <span class="val">1.0850</span></span>
+          <span>H: <span class="up">1.0920</span></span>
+          <span>L: <span class="dn">1.0820</span></span>
+          <span>C: <span class="val">1.0890</span></span>
+        </div>
+      </div>
+      <canvas id="btChartEl"></canvas>
+      <div class="bt-csv-row">
+        <span class="bt-csv-lbl">📥 رفع بيانات CSV:</span>
+        <button class="bt-csv-btn" onclick="document.getElementById('csvUpload').click()">اختر ملف</button>
+        <input type="file" id="csvUpload" accept=".csv" style="display:none;">
+      </div>
+      <div class="bt-toolbar">
+        <div class="bt-controls">
+          <button class="bt-btn" title="الخطوة السابقة">⏮</button>
+          <button class="bt-btn bt-play-btn" title="تشغيل">▶</button>
+          <button class="bt-btn" title="الخطوة التالية">⏭</button>
+        </div>
+        <div class="bt-prog-wrap">
+          <div class="bt-prog-track">
+            <div class="bt-prog-fill" style="width:45%"></div>
+          </div>
+        </div>
+        <span class="bt-speed-lbl">1x</span>
+      </div>
     </div>
 
-    <!-- 2. مفكرة التداول -->
-    <div class="journal-card">
-        <div class="bt-notes-section">
-            <div class="bt-notes-header">
-                <h4>مفكرة التداول (Trading Journal)</h4>
-                <p>سجل أسباب الدخول وإدارتك للصفقة بدقة لبناء داتا صحيحة</p>
-            </div>
-            
-            <div class="bt-notes-grid">
-                <div class="bt-note-field">
-                    <label class="bt-note-label">📝 أسباب الدخول (Confluences)</label>
-                    <textarea class="bt-note-input" placeholder="مثال: سحب سيولة (Liquidity Sweep) + تغير في الهيكلية (MSS) + توافق مع إطار زمني أعلى..."></textarea>
-                </div>
-                <div class="bt-note-field">
-                    <label class="bt-note-label">📊 إدارة الصفقة (Trade Management)</label>
-                    <textarea class="bt-note-input" placeholder="كيف أدرت الصفقة؟ هل التزمت بوقف الخسارة وجني الأرباح الجزئي؟"></textarea>
-                </div>
-            </div>
-            
-            <div class="bt-notes-footer">
-                <p>الالتزام بتدوين الملاحظات هو الفارق بين المقامر والمتداول المحترف.</p>
-                <button class="bt-save-btn">💾 حفظ التدوينة</button>
-            </div>
+    <!-- قسم الملاحظات -->
+    <div class="bt-notes-section">
+      <div class="bt-notes-header">
+        <div>
+          <h4>📝 ملاحظات الباك تيست</h4>
         </div>
+      </div>
+      <div class="bt-notes-grid">
+        <div class="bt-note-field">
+          <div class="bt-note-label">📍 الملاحظات العامة</div>
+          <textarea class="bt-note-input" placeholder="اكتب ملاحظاتك هنا..."></textarea>
+        </div>
+        <div class="bt-note-field">
+          <div class="bt-note-label">🎯 إعدادات الدخول</div>
+          <textarea class="bt-note-input" placeholder="سجل إعدادات الدخول..."></textarea>
+        </div>
+      </div>
+      <div style="padding:10px 16px;border-top:1px solid rgba(26,58,92,0.4);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;">
+        <button class="bt-save-btn">💾 حفظ الملاحظات</button>
+      </div>
     </div>
+  </div>
 
 </div>
+</div>
+
+<!-- صفحات مخفية (page0, page1, page2) -->
+<div id="page0" style="display:none;"></div>
+<div id="page1" style="display:none;"></div>
+<div id="page2" style="display:none;"></div>
+
+<script>
+// دوال بسيطة للتوافقية
+function backFromLesson() {
+  alert('العودة للصفحة الرئيسية');
+}
+
+// رسم شارت بسيط
+const canvas = document.getElementById('btChartEl');
+if (canvas && canvas.getContext) {
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(0,212,255,0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '12px Rajdhani';
+  ctx.fillStyle = 'var(--text-dim)';
+  ctx.fillText('شارت الباك تيست التفاعلي', 10, 30);
+}
+</script>
 
 </body>
 </html>
