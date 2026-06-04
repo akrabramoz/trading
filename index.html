@@ -1,1385 +1,2104 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مكتبة AK | اختبار ICT — Market Maker Primer</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#050a0f;--surface:#0a1520;--surface2:#0f1e2e;
-  --border:#1a3a5c;--accent:#00d4ff;--accent2:#ff6b35;
-  --gold:#ffd700;--green:#00ff88;--red:#ff4466;
-  --text:#c8dde8;--text-dim:#5a7a8a;
-  --glow:0 0 20px rgba(0,212,255,0.3);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
-#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة AK | اختبار ICT — Market Maker Primer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050a0f;
+            --surface: #0a1520;
+            --surface2: #0f1e2e;
+            --border: #1a3a5c;
+            --accent: #00d4ff;
+            --accent2: #ff6b35;
+            --gold: #ffd700;
+            --green: #00ff88;
+            --red: #ff4466;
+            --text: #c8dde8;
+            --text-dim: #5a7a8a;
+            --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
 
-/* ═══════════════════════════════
-   صفحة 0 — الترحيب
-═══════════════════════════════ */
-#page0{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:30px 20px 80px;}
-.welcome-inner{max-width:780px;width:100%;margin:0 auto;}
-.hero{text-align:center;padding:48px 0 32px;border-bottom:1px solid var(--border);margin-bottom:40px;position:relative;}
-.hero::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:120px;height:2px;background:var(--accent);box-shadow:var(--glow);}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:30px;padding:6px 18px;font-size:12px;color:var(--accent);letter-spacing:2px;margin-bottom:20px;}
-.hero h1{font-size:clamp(20px,4vw,32px);font-weight:900;color:#fff;line-height:1.4;margin-bottom:10px;}
-.hero h1 span{color:var(--accent);}
-.hero p{font-size:14px;color:var(--text-dim);line-height:1.8;max-width:520px;margin:0 auto;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* زر الحلقة الحالية */
-.current-ep-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(0,255,136,0.08),rgba(0,212,255,0.05));border:1px solid rgba(0,255,136,0.3);border-radius:12px;padding:14px 22px;color:#fff;text-decoration:none;font-size:14px;font-weight:700;margin-bottom:32px;cursor:pointer;transition:all 0.3s;}
-.current-ep-btn:hover{background:linear-gradient(135deg,rgba(0,255,136,0.16),rgba(0,212,255,0.1));box-shadow:0 4px 20px rgba(0,255,136,0.2);}
-.ep-badge{background:var(--green);color:#000;font-size:10px;font-weight:900;padding:3px 8px;border-radius:4px;}
+        html {
+            scroll-behavior: smooth;
+        }
 
-.lib-brand{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(0,212,255,0.02));border:1px solid rgba(0,212,255,0.15);border-radius:16px;padding:20px 24px;margin-bottom:40px;}
-.lib-brand img{width:60px;height:60px;border-radius:12px;object-fit:cover;flex-shrink:0;border:2px solid rgba(0,212,255,0.25);box-shadow:0 0 16px rgba(0,212,255,0.2);}
-.lib-brand-text h2{font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;}
-.lib-brand-text p{font-size:13px;color:var(--text-dim);line-height:1.7;}
-.lib-brand-text p strong{color:var(--accent);}
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-.channels-title{font-size:13px;color:var(--text-dim);letter-spacing:2px;text-align:center;margin-bottom:20px;text-transform:uppercase;}
-.channels-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:40px;align-items:stretch;}
-.ch-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-decoration:none;color:inherit;transition:all 0.3s;position:relative;overflow:hidden;display:flex;flex-direction:column;}
-.ch-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,212,255,0.15);}
-.ch-logo{width:52px;height:52px;border-radius:10px;object-fit:cover;margin-bottom:12px;border:1px solid var(--border);}
-.ch-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
-.ch-sub{font-size:11px;color:var(--accent);margin-bottom:8px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
-.ch-desc{font-size:12px;color:var(--text-dim);line-height:1.65;flex:1;}
-.ch-stats{display:flex;gap:5px;margin:10px 0 8px;flex-wrap:wrap;}
-.ch-stat{background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.12);border-radius:4px;padding:3px 8px;font-size:10px;color:var(--accent);white-space:nowrap;}
-.ch-join{display:inline-flex;align-items:center;justify-content:center;gap:5px;margin-top:auto;padding:8px 14px;background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.3);border-radius:7px;font-size:11px;color:var(--green);font-weight:700;width:100%;}
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-.free-banner{background:linear-gradient(135deg,rgba(0,255,136,0.07),rgba(0,212,255,0.05));border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:20px 24px;margin-bottom:36px;text-align:center;}
-.free-banner h3{font-size:16px;font-weight:700;color:var(--green);margin-bottom:6px;}
-.free-banner p{font-size:13px;color:var(--text-dim);line-height:1.7;}
-.free-tag{display:inline-block;background:var(--green);color:#000;font-weight:900;font-size:11px;padding:3px 10px;border-radius:4px;margin-bottom:8px;}
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+            position: relative;
+            z-index: 1;
+        }
 
-.quiz-info{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:32px;}
-.quiz-info-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
-.info-item{background:var(--surface2);border-radius:10px;padding:14px;text-align:center;}
-.info-item .i-val{font-size:22px;font-weight:900;color:var(--accent);font-family:'Rajdhani',sans-serif;}
-.info-item .i-lbl{font-size:11px;color:var(--text-dim);margin-top:3px;}
+        /* أزرار عامة */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+        }
 
-/* زر ابدأ — عرض كامل */
-.start-btn-wrap{display:flex;justify-content:flex-start;}
-.start-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:20px 36px;background:linear-gradient(135deg,var(--accent),#0077cc);border:none;border-radius:14px;color:#000;font-family:'Cairo',sans-serif;font-size:18px;font-weight:900;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 24px rgba(0,212,255,0.35);}
-.start-btn:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,212,255,0.5);}
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #0077cc);
+            color: #000;
+            font-size: 16px;
+            box-shadow: 0 4px 24px rgba(0, 212, 255, 0.35);
+        }
 
-/* ═══════════════════════════════
-   صفحة 1 — الاختبار (سوايب A/B)
-═══════════════════════════════ */
-#page1{display:none;position:relative;z-index:1;min-height:100vh;}
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 36px rgba(0, 212, 255, 0.5);
+        }
 
-/* تبويب السوايب */
-.swipe-tabs{display:flex;border-bottom:2px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10;}
-.swipe-tab{flex:1;padding:8px 12px;text-align:center;font-size:12px;font-weight:700;color:var(--text-dim);cursor:pointer;transition:all 0.3s;border-bottom:2px solid transparent;margin-bottom:-2px;}
-.swipe-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.swipe-tab-icon{font-size:14px;display:block;margin-bottom:2px;}
+        .btn-secondary {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--accent);
+            font-size: 13px;
+        }
 
-.swipe-container{position:relative;overflow:hidden;}
-.swipe-panel{display:none;}
-.swipe-panel.active{display:block;}
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
+        }
 
-.container{max-width:860px;margin:0 auto;padding:30px 20px 80px;}
+        .btn-success {
+            background: linear-gradient(135deg, var(--green), #00aa55);
+            color: #000;
+            font-size: 15px;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+        }
 
-/* رأس صفحة الاختبار */
-.header{text-align:center;padding:36px 0 28px;border-bottom:1px solid var(--border);margin-bottom:36px;position:relative;}
-.header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:120px;height:2px;background:var(--accent);box-shadow:var(--glow);}
-.series-label{font-family:'Rajdhani',sans-serif;color:var(--accent);font-size:12px;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;opacity:0.8;}
-.header h1{font-size:22px;font-weight:900;color:#fff;line-height:1.4;margin-bottom:6px;}
-.header h1 span{color:var(--accent);}
-.header p{font-size:13px;color:var(--text-dim);}
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 255, 136, 0.5);
+        }
 
-/* شريط الوقت */
-.top-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;margin-bottom:20px;gap:16px;flex-wrap:wrap;}
-.timer-wrap{display:flex;align-items:center;gap:10px;}
-.timer-icon{font-size:18px;}
-.timer-label{font-size:11px;color:var(--text-dim);}
-.timer-display{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--accent);line-height:1;transition:color 0.4s;}
-.timer-display.warning{color:var(--gold);animation:pulse 1s infinite;}
-.timer-display.danger{color:var(--red);animation:pulse 0.5s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.timer-bar-track{width:100%;max-width:220px;height:4px;background:var(--border);border-radius:99px;overflow:hidden;}
-.timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:99px;transition:width 1s linear,background 0.4s;}
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
 
-.score-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;margin-bottom:28px;gap:16px;flex-wrap:wrap;}
-.score-item{text-align:center;}
-.score-item .val{font-size:26px;font-weight:900;color:var(--accent);font-family:'Rajdhani',sans-serif;line-height:1;}
-.score-item .lbl{font-size:11px;color:var(--text-dim);margin-top:3px;}
-.progress-wrap{flex:1;min-width:180px;}
-.progress-track{background:var(--border);border-radius:99px;height:6px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:99px;transition:width 0.5s ease;width:0%;}
+        /* بطاقات */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
 
-.quiz-section-header{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(255,107,53,0.04));border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:14px;}
-.qsh-icons{display:flex;gap:6px;}
-.qsh-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
-.qsh-icon.theory{background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.3));}
-.qsh-icon.practical{background:linear-gradient(135deg,var(--accent2),rgba(255,107,53,0.3));}
-.qsh-text h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;}
-.qsh-text p{font-size:12px;color:var(--text-dim);}
-.qsh-badges{display:flex;gap:8px;margin-top:6px;}
-.qsh-badge{font-size:10px;padding:2px 10px;border-radius:4px;font-weight:700;}
-.qsh-badge.t{background:rgba(0,212,255,0.12);color:var(--accent);border:1px solid rgba(0,212,255,0.2);}
-.qsh-badge.p{background:rgba(255,107,53,0.12);color:var(--accent2);border:1px solid rgba(255,107,53,0.2);}
+        .card-accent {
+            border-color: rgba(0, 212, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(0, 212, 255, 0.02));
+        }
 
-/* بطاقات الأسئلة */
-.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;transition:border-color 0.3s;position:relative;overflow:hidden;}
-.q-card::before{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:var(--border);transition:background 0.3s;}
-.q-card.correct::before{background:var(--green);}
-.q-card.wrong::before{background:var(--red);}
-.q-number{font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
-.q-type-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.q-type-dot.theory{background:var(--accent);}
-.q-type-dot.practical{background:var(--accent2);}
-.q-type-mini{font-size:10px;padding:1px 7px;border-radius:3px;}
-.q-type-mini.theory{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.18);}
-.q-type-mini.practical{background:rgba(255,107,53,0.1);color:var(--accent2);border:1px solid rgba(255,107,53,0.18);}
-.q-text{font-size:15px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.7;}
-.options{display:grid;gap:9px;}
-.option{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all 0.2s;text-align:right;}
-.option:hover:not(.disabled){border-color:var(--accent);background:rgba(0,212,255,0.05);transform:translateX(-3px);}
-.option.correct-ans{border-color:var(--green);background:rgba(0,255,136,0.08);}
-.option.wrong-ans{border-color:var(--red);background:rgba(255,68,102,0.08);}
-.option.disabled{cursor:default;}
-.opt-letter{width:27px;height:27px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;flex-shrink:0;transition:all 0.2s;}
-.option.correct-ans .opt-letter{background:var(--green);color:#000;}
-.option.wrong-ans .opt-letter{background:var(--red);color:#fff;}
-.opt-text{font-size:14px;line-height:1.6;flex:1;}
-.feedback{display:none;margin-top:14px;padding:12px 15px;border-radius:9px;font-size:13px;line-height:1.7;border-right:3px solid;}
-.feedback.show{display:block;}
-.feedback.correct{background:rgba(0,255,136,0.07);border-color:var(--green);color:#a0ffcc;}
-.feedback.wrong{background:rgba(255,68,102,0.07);border-color:var(--red);color:#ffb3c0;}
+        /* صفحة الترحيب */
+        #page0 {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
 
-/* زر الانتقال للصفحة التالية — أسفل يسار صغير */
-.nav-btn-wrap{display:flex;justify-content:flex-start;margin-top:28px;}
-.nav-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);border-radius:10px;color:var(--accent);font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.3s;}
-.nav-btn:hover{background:rgba(0,212,255,0.15);box-shadow:0 4px 16px rgba(0,212,255,0.2);}
-.nav-btn:disabled{opacity:0.3;cursor:not-allowed;}
+        .hero {
+            text-align: center;
+            padding: 48px 0 32px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+            position: relative;
+        }
 
-/* ── Backtest & Journal ── */
-.backtest-card{background:linear-gradient(135deg,#0a1e30,#0f2a40);border:1px solid rgba(0,212,255,0.3);border-radius:16px;padding:26px;margin-top:20px;position:relative;overflow:hidden;}
-.backtest-card::before{content:'BACKTEST';position:absolute;top:18px;left:22px;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:4px;color:rgba(0,212,255,0.12);font-weight:700;}
-.bt-title{font-size:17px;font-weight:900;color:#fff;margin-bottom:6px;}
-.bt-time{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);border-radius:6px;padding:4px 12px;font-size:12px;color:var(--gold);margin-bottom:22px;}
-.bt-steps{display:grid;gap:13px;}
-.bt-step{display:flex;gap:15px;align-items:flex-start;}
-.step-num{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.4));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#000;flex-shrink:0;box-shadow:0 0 10px rgba(0,212,255,0.25);}
-.step-content h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
-.step-content p{font-size:12px;color:var(--text-dim);line-height:1.7;}
-.step-content .tag{display:inline-block;background:rgba(0,212,255,0.1);border-radius:4px;padding:1px 7px;font-size:10px;color:var(--accent);margin-top:5px;}
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: var(--glow);
+        }
 
-.journal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;margin-top:22px;position:relative;}
-.journal-card::before{content:'📔';position:absolute;top:-13px;right:22px;font-size:22px;}
-.journal-q{font-size:15px;font-weight:700;color:#fff;line-height:1.7;margin-top:10px;padding:15px;background:rgba(255,215,0,0.05);border-radius:10px;border-right:3px solid var(--gold);}
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 30px;
+            padding: 6px 18px;
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
 
-/* زر الانتقال للنتيجة — أسفل يسار */
-.result-nav-wrap{display:flex;justify-content:flex-start;margin-top:28px;}
-.result-nav-btn{display:inline-flex;align-items:center;gap:10px;padding:15px 28px;background:linear-gradient(135deg,var(--green),#00aa55);border:none;border-radius:12px;color:#000;font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(0,255,136,0.3);}
-.result-nav-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,136,0.5);}
+        .hero h1 {
+            font-size: clamp(20px, 4vw, 32px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
 
-<!-- ═══════════════════════════════
-     صفحة الدرس المحسن
-═══════════════════════════════ -->
-<div id="pagelesson">
-<div class="lesson-wrap">
+        .hero h1 span {
+            color: var(--accent);
+        }
 
-  <!-- زر الرجوع -->
-  <button class="lesson-back-btn" onclick="backFromLesson()">
-    → العودة للصفحة الرئيسية
-  </button>
+        .hero p {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.8;
+            max-width: 520px;
+            margin: 0 auto;
+        }
 
-  <!-- رأس الدرس -->
-  <div class="lesson-header">
-    <div class="lesson-badge">📘 مكتبة AK · Market Maker Primer Course · ICT</div>
-    <div class="lesson-title">ما الذي يجب على المتداولين الجدد التركيز عليه</div>
-    <div class="lesson-subtitle">ملخص محسن ومكتمل للحلقة الأولى — الحلقة النصية الكاملة + الملاحظات الرسمية</div>
-    <div class="concepts-list">
-      <span class="concept-tag">🎯 نظرية صيد السيولة</span>
-      <span class="concept-tag">📍 مناطق السيولة</span>
-      <span class="concept-tag orange">🧱 بلوك الأوامر</span>
-      <span class="concept-tag orange">🎯 دخول عالي الدقة</span>
-      <span class="concept-tag">📉 Zero Drawdown</span>
-      <span class="concept-tag">📊 Scaling Profits</span>
-    </div>
-  </div>
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
 
-  <!-- فهرس المحتوى -->
-  <div class="lesson-toc">
-    <div class="lesson-toc-title">📋 محتويات الدرس</div>
-    <div class="toc-grid">
-      <a class="toc-item" href="#ls-01"><span class="toc-num">01</span>لماذا هذه الدروس؟</a>
-      <a class="toc-item" href="#ls-02"><span class="toc-num">02</span>من يستفيد أكثر؟</a>
-      <a class="toc-item" href="#ls-03"><span class="toc-num">03</span>السعر فركتلي</a>
-      <a class="toc-item" href="#ls-04"><span class="toc-num">04</span>ما الذي يحرك السعر؟</a>
-      <a class="toc-item" href="#ls-05"><span class="toc-num">05</span>القمم والقيعان المتساوية</a>
-      <a class="toc-item" href="#ls-06"><span class="toc-num">06</span>مؤسسات vs تجزئة</a>
-      <a class="toc-item" href="#ls-07"><span class="toc-num">07</span>منهجية الدراسة</a>
-      <a class="toc-item" href="#ls-08"><span class="toc-num">08</span>الحساب التجريبي</a>
-      <a class="toc-item" href="#ls-09"><span class="toc-num">09</span>الأهداف الأسبوعية</a>
-      <a class="toc-item" href="#ls-10"><span class="toc-num">10</span>نطاق سحب السيولة</a>
-      <a class="toc-item" href="#ls-11"><span class="toc-num">11</span>بلوك الأوامر البيعي</a>
-      <a class="toc-item" href="#ls-12"><span class="toc-num">12</span>نقطة الدخول منخفضة المخاطر</a>
-      <a class="toc-item" href="#ls-13"><span class="toc-num">13</span>ما هي ملاحقة السعر؟</a>
-      <a class="toc-item" href="#ls-14"><span class="toc-num">14</span>حساب نطاق الربح</a>
-      <a class="toc-item" href="#ls-15"><span class="toc-num">15</span>إدارة الصفقة</a>
-      <a class="toc-item" href="#ls-16"><span class="toc-num">16</span>ما بعد سحب السيولة</a>
-    </div>
-  </div>
+        .ch-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
 
-  <!-- ────────────────────────────
-       القسم 1: لماذا هذه الدروس؟
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-01">
-    <div class="lesson-section-title">
-      <div class="ls-icon">💡</div>
-      <span>01 — لماذا هذه الدروس؟ — نظرة ICT الشخصية</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>هذه الدروس صُممت لتكون <strong>أقصر وأكثر تركيزاً وأكثر كثافة</strong> بالمحتوى مقارنة بدروس ICT القديمة، مع الحفاظ على إمكانية الإدارة الزمنية لكل درس.</p>
-        <p>ICT نفسه كان متداولاً في <span class="highlight">الأسهم والسندات والسلع وعقود العملات الآجلة (Futures)</span> لأكثر من عقد قبل دخول سوق الفوركس. ورغم هذه الخبرة الواسعة، وقع في نفس أخطاء المبتدئين في الفوركس بسبب طبيعة السوق الجذابة:</p>
-        <ul class="lesson-list">
-          <li>السوق يعمل <strong>24 ساعة</strong> — وهذا يشبه متجر حلوى مفتوح طوال اليوم!</li>
-          <li>سيولة عالية جداً وحركة سعر سريعة</li>
-          <li>يمنح فرصاً للتداول اليومي والسكالبينج والسوينج والبوزيشن تريدينج</li>
-          <li>الإثارة + التوافر المستمر = فخ عاطفي حتى للمحترفين</li>
-        </ul>
-        <div class="key-insight">
-          💬 <em>"تعلمت من أخطائي على مدار السنوات، وهذه الفيديوهات ستساعدك على تجنب كثير من المزالق التي وقعت فيها."</em> — ICT
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-01">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-01</div>
-        <div class="img-placeholder-text">صورة: نظرة عامة على سوق الفوركس كما يراه ICT</div>
-      </div>
-    </div>
-  </div>
+        .ch-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 212, 255, 0.15);
+        }
 
-  <!-- ────────────────────────────
-       القسم 2: من يستفيد أكثر؟
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-02">
-    <div class="lesson-section-title">
-      <div class="ls-icon orange">🧠</div>
-      <span>02 — من يستفيد أكثر من تعلم ICT؟</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>هنا مفاجأة قد تكون صادمة: <span class="highlight-o">المبتدئ تماماً بدون أي خلفية تقليدية يمتلك ميزة واضحة</span> على من درس مدارس التجزئة الأخرى.</p>
-        <p><strong>لماذا؟</strong> لأن ICT يتعارض تماماً مع:</p>
-        <ul class="lesson-list orange">
-          <li><span class="highlight-r">موجات إليوت (Elliott Waves)</span> — تُشتت انتباهك عن حركة السعر الحقيقية</li>
-          <li><span class="highlight-r">العرض والطلب (Supply & Demand)</span> — مفهوم مختلف تماماً عن ICT</li>
-          <li><span class="highlight-r">الهارمونيك (Harmonic Patterns)</span> — نماذج تزيد التعقيد دون فائدة حقيقية</li>
-          <li><span class="highlight-r">النماذج الحيوانية (Animal Patterns)</span> — كل هذه مشتتات على الشارت</li>
-          <li>أي مؤشرات فنية تقليدية (RSI, MACD, Bollinger...)</li>
-        </ul>
-        <div class="key-insight orange">
-          ⚠️ <strong>تحذير:</strong> إذا كنت قد تعلمت أياً من المدارس أعلاه، ستواجه صعوبة في إعادة برمجة تفكيرك. <span class="highlight-o">ICT يتطلب التفكير بشكل معاكس تماماً</span> لما تعلمته.
-        </div>
-        <p>كل ما تحتاجه حقاً للقراءة على الشارت هو: <span class="highlight">الافتتاح (O) · الأعلى (H) · الأدنى (L) · الإغلاق (C)</span></p>
-      </div>
-      <div class="img-placeholder" id="img-02">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-02</div>
-        <div class="img-placeholder-text">صورة: شارت نظيف بدون مؤشرات مقابل شارت مليء بالمؤشرات التقليدية</div>
-      </div>
-    </div>
-  </div>
+        .ch-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
 
-  <!-- ────────────────────────────
-       القسم 3: السعر فركتلي
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-03">
-    <div class="lesson-section-title">
-      <div class="ls-icon">🔄</div>
-      <span>03 — السعر ذو طبيعة فركتلية (Fractal)</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>مفهوم أساسي يجب استيعابه جيداً: <span class="highlight">السعر فركتلي</span>، بمعنى أن:</p>
-        <ul class="lesson-list">
-          <li>ما تراه على إطار زمني معين، <strong>يمكن رؤيته بنفس الشكل</strong> على الأطر الأعلى والأدنى</li>
-          <li>نفس نوع التكوين (Formation) أو الإعداد (Setup) يتكرر على كل إطار زمني</li>
-          <li>الأطر الزمنية المختلفة لا تعني قواعد مختلفة — المبادئ واحدة</li>
-        </ul>
-        <div class="key-insight green">
-          ✅ <strong>الفائدة العملية:</strong> يمكنك التدرب والدراسة على إطار <span class="highlight-g">M15</span> وستجد نفس الظواهر على H1, H4, Daily وأي إطار آخر. اختر إطاراً واحداً وأتقن الرؤية فيه.
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-03">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-03</div>
-        <div class="img-placeholder-text">صورة: نفس النمط السعري يظهر على M15 وH4 وDaily معاً</div>
-      </div>
-    </div>
-  </div>
+        .ch-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
 
-  <!-- ────────────────────────────
-       القسم 4: ما الذي يحرك السعر؟
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-04">
-    <div class="lesson-section-title">
-      <div class="ls-icon">💰</div>
-      <span>04 — ما الذي يجعل السعر يتحرك إلى مستويات معينة؟</span>
-    </div>
-    <div class="lesson-row full">
-      <div class="lesson-text-box">
-        <p>هذا السؤال هو <span class="highlight">جوهر كل شيء في ICT</span>. بدون فهم الإجابة، احتمالية نجاحك في التداول تقترب من الصفر.</p>
-      </div>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <div class="concept-card accent-border">
-          <div class="concept-card-title">🎯 الإجابة: السيولة (Liquidity)</div>
-          <p>الأسواق تتحرك دائماً ذهاباً وإياباً بحثاً عن <strong>السيولة</strong> — أي أوامر وقف الخسارة المتراكمة فوق القمم وتحت القيعان.</p>
-        </div>
-        <div class="concept-card orange-border">
-          <div class="concept-card-title">💡 فكر هكذا دائماً</div>
-          <p>قبل أي تداول، اسأل نفسك: <span class="highlight-o">"أين ستكون وقف الخسارة للمتداولين الآخرين؟"</span> هذا هو تفكير صانع السوق.</p>
-        </div>
-        <div class="key-insight gold">
-          🎓 <strong>الفكرة التي ستغير طريقة تفكيرك:</strong><br>
-          السعر لا يتحرك لأن "المؤشر أعطى إشارة" — بل يتحرك <strong>لأن هناك أوامر مخبأة في مكان ما</strong> والسوق يذهب لإيجادها وتفعيلها.
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-04">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-04</div>
-        <div class="img-placeholder-text">صورة: شارت يوضح الأسواق تتحرك ذهاباً وإياباً بحثاً عن السيولة فوق القمم وتحت القيعان</div>
-      </div>
-    </div>
-  </div>
+        .ch-sub {
+            font-size: 11px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+        }
 
-  <!-- ────────────────────────────
-       القسم 5: القمم والقيعان المتساوية
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-05">
-    <div class="lesson-section-title">
-      <div class="ls-icon orange">📊</div>
-      <span>05 — القمم والقيعان المتساوية (Equal Highs / Equal Lows)</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>هذه هي <span class="highlight-o">أسهل وأوضح نقطة سعرية</span> يمكنك رؤيتها في الشارت — حتى طفل في الخامسة يمكنه تمييزها!</p>
-        <p><strong>التعريف:</strong> أي منطقة فيها قمتان أو أكثر عند نفس المستوى تقريباً (Double Top)، أو قاعان عند نفس المستوى تقريباً (Double Bottom).</p>
-        <div class="key-insight">
-          📌 <strong>التطبيق العملي:</strong><br>
-          ارسم <strong>خطاً أفقياً صغيراً</strong> فوق القمم المتساوية وأسفل القيعان المتساوية.<br>
-          اكتب بجانبها ملاحظة توضيحية (Annotation):<br>
-          — فوق القمم: <span class="highlight"><strong>Buy Stops</strong></span><br>
-          — تحت القيعان: <span class="highlight-r"><strong>Sell Stops</strong></span>
-        </div>
-        <ul class="lesson-list">
-          <li>لا يشترط أن تكون متساوية تماماً — التقارب كافٍ (فارق 1-2 نقطة مقبول)</li>
-          <li>كلما بدت النقطتان "متشابهتين للعين" كلما كانت منطقة سيولة أوضح</li>
-          <li>هذا هو <strong>الخط الأفقي الوحيد</strong> الذي يستخدمه ICT</li>
-        </ul>
-      </div>
-      <div class="img-placeholder" id="img-05">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-05</div>
-        <div class="img-placeholder-text">صورة: شارت EURUSD M15 مع خطوط Buy Stops فوق EQH وSell Stops تحت EQL</div>
-      </div>
-    </div>
-  </div>
+        .ch-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.65;
+            flex: 1;
+        }
 
-  <!-- ────────────────────────────
-       القسم 6: مؤسسات vs تجزئة
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-06">
-    <div class="lesson-section-title">
-      <div class="ls-icon green">⚖️</div>
-      <span>06 — كيف تفكر المؤسسات مقابل متداولي التجزئة؟</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <div class="compare-lesson">
-          <div class="compare-col-lesson retail">
-            <h4>❌ متداول التجزئة (Retail)</h4>
-            <ul>
-              <li>يرى Double Bottom = دعم قوي للشراء</li>
-              <li>يرى Double Top = مقاومة قوية للبيع</li>
-              <li>يبحث عن إشارات المؤشرات</li>
-              <li>يضع وقف خسارته تحت القاع السابق</li>
-              <li>يعتقد أن السوق "يحترم" هذه المستويات</li>
-            </ul>
-          </div>
-          <div class="compare-col-lesson inst">
-            <h4>✅ المتداول المؤسسي (Institutional)</h4>
-            <ul>
-              <li>يرى Double Bottom = <strong>مجمع Sell Stops</strong> تحته</li>
-              <li>يرى Double Top = <strong>مجمع Buy Stops</strong> فوقه</li>
-              <li>يبحث عن أين تجلس الأوامر</li>
-              <li>يستهدف هذه الأوامر لإيجاد الطرف المقابل</li>
-              <li>يعلم أن السوق سيكسر هذه المستويات</li>
-            </ul>
-          </div>
-        </div>
-        <div class="key-insight green">
-          🔄 <strong>التحول الذهني المطلوب:</strong><br>
-          عندما ترى Double Bottom ويصعد السعر، <span class="highlight-r">لا تفكر في الشراء</span>. فكر: <span class="highlight-g">"السوق يتجهز للهبوط وضرب Sell Stops الموجودة أسفل هذه القيعان."</span>
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-06">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-06</div>
-        <div class="img-placeholder-text">صورة: نفس الشارت — كيف يراه متداول التجزئة مقابل المتداول المؤسسي</div>
-      </div>
-    </div>
-  </div>
+        .ch-join {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: auto;
+            padding: 8px 14px;
+            background: rgba(0, 255, 136, 0.12);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 7px;
+            font-size: 11px;
+            color: var(--green);
+            font-weight: 700;
+            width: 100%;
+            text-decoration: none;
+        }
 
-  <!-- ────────────────────────────
-       القسم 7: منهجية الدراسة
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-07">
-    <div class="lesson-section-title">
-      <div class="ls-icon gold">📚</div>
-      <span>07 — منهجية الدراسة الصحيحة (شهر كامل)</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>قبل أن تضع أي صفقة تجريبية، ICT يطلب منك القيام بما يلي <strong>لمدة شهر كامل</strong>:</p>
-        <ul class="lesson-list">
-          <li>اختر <span class="highlight">زوجاً أو زوجين فقط</span> (مثل EURUSD أو GBPUSD)</li>
-          <li>استخدم إطار زمني <span class="highlight">M15</span> — مثالي لرؤية كثير من السيناريوهات</li>
-          <li><strong>لا تتداول!</strong> فقط راقب وسجل</li>
-          <li>حدد كل القمم والقيعان المتساوية بخط أفقي وتوضيح نصي</li>
-          <li>راقب كم مرة يتجاوز السعر هذه المناطق ثم ينعكس</li>
-        </ul>
-        <div class="key-insight gold">
-          🎯 <strong>ماذا ستكتشف بعد شهر؟</strong><br>
-          ستصدم من كثرة تكرار هذه الحركة. السيولة تُصاد في كل مكان وزمان — هذا ليس استثناء بل هو <strong>القاعدة</strong> في كيفية عمل الأسواق.
-        </div>
-        <p>يمكنك <strong>التداول الورقي (Paper Trading)</strong> — أي تدوين ملاحظات افتراضية "كنت سأفعل كذا" — لكن دون تنفيذ فعلي.</p>
-      </div>
-      <div class="img-placeholder" id="img-07">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-07</div>
-        <div class="img-placeholder-text">صورة: شارت M15 مُحلَّل بالكامل مع تعليقات Buy Stops وSell Stops وتكرار الظاهرة</div>
-      </div>
-    </div>
-  </div>
+        .free-banner {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.07), rgba(0, 212, 255, 0.05));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 36px;
+            text-align: center;
+        }
 
-  <!-- ────────────────────────────
-       القسم 8: الحساب التجريبي
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-08">
-    <div class="lesson-section-title">
-      <div class="ls-icon">🧪</div>
-      <span>08 — الحساب التجريبي (Demo) — صندوق الرمل</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>ICT يسمي الحساب التجريبي <span class="highlight">"العب في صندوق الرمل"</span> — وهو لا يمزح.</p>
-        <div class="concept-card green-border">
-          <div class="concept-card-title">🌟 ما يمنحك إياه الحساب التجريبي</div>
-          <p>• بناء <strong>عادات تداول صحيحة</strong> من الأساس<br>
-          • تطوير <strong>عقلية المتداول والمحلل الناجح</strong><br>
-          • فهم حقيقي لـ <strong>إدارة المخاطر</strong><br>
-          • التعلم من الأخطاء <strong>بدون خسارة مالية حقيقية</strong><br>
-          • الأهم: خالٍ من المخاطر بالكامل</p>
-        </div>
-        <div class="key-insight">
-          🔴 <strong>قاعدة ذهبية لا استثناء فيها:</strong><br>
-          "إذا لم تكن تحقق أرباحاً في الحساب التجريبي، <span class="highlight-r">لن تحقق في الحساب الحقيقي</span>."<br>
-          كل تعليم ICT يتم في Demo — هذا ليس مجرد اقتراح، هذا هو المنهج.
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-08">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-08</div>
-        <div class="img-placeholder-text">صورة: واجهة منصة التداول التجريبي مع صفقة مفتوحة للدراسة</div>
-      </div>
-    </div>
-  </div>
+        .free-banner h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 6px;
+        }
 
-  <!-- ────────────────────────────
-       القسم 9: الأهداف الأسبوعية
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-09">
-    <div class="lesson-section-title">
-      <div class="ls-icon gold">🎯</div>
-      <span>09 — الأهداف الأسبوعية وتعليم الانضباط والصبر</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>للمتداول الجديد، ICT يقترح هدفاً أسبوعياً <span class="highlight">منخفضاً جداً</span> — وهذا مقصود:</p>
-        <div class="concept-card gold-border">
-          <div class="concept-card-title">📊 الهدف الأسبوعي المقترح</div>
-          <p><span class="highlight">20 إلى 30 نقطة</span> فقط في الأسبوع للبداية — وهذا هدف سهل التحقيق في معظم الأسابيع.<br><br>
-          <strong>الأفضل:</strong> حدده بنسبة مئوية (<span class="highlight">مثلاً 5%</span>) لأن 30 نقطة قد تُحقق في نصف ساعة — النسبة تضبط العائد بالمخاطرة.</p>
-        </div>
-        <div class="key-insight gold">
-          🛑 <strong>بعد تحقيق الهدف: توقف فوراً!</strong><br>
-          لا تستمر في التداول — حتى لو "يدك حارة". اغلق المنصة وانتظر الأسبوع القادم.<br><br>
-          <strong>لماذا؟</strong> الاستمرار هو <span class="highlight-r">عقلية المقامر</span>، ونحن لا نقامر — نبحث عن سيناريوهات ذات احتمالية عالية.
-        </div>
-        <p><strong>ما يعلمك إياه هذا النظام:</strong></p>
-        <ul class="lesson-list">
-          <li><span class="highlight">الصبر:</span> انتظار الإعداد التالي وعدم الاندفاع</li>
-          <li><span class="highlight">الانضباط:</span> إجبار نفسك على اتباع القواعد حتى عندما تريد تكسيرها</li>
-        </ul>
-      </div>
-      <div class="img-placeholder" id="img-09">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-09</div>
-        <div class="img-placeholder-text">صورة: شارت أسبوعي مع تحقيق الهدف (20-30 نقطة) والتوقف عنده</div>
-      </div>
-    </div>
-  </div>
+        .free-banner p {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
 
-  <!-- ────────────────────────────
-       القسم 10: نطاق سحب السيولة
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-10">
-    <div class="lesson-section-title">
-      <div class="ls-icon">📏</div>
-      <span>10 — نطاق سحب السيولة (10-20 نقطة) — أهداف دقيقة لا مناطق غامضة</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>عندما يستهدف السعر سيولة تحت القيعان المزدوجة، لا يكتفي بالوصول إليها — بل يتجاوزها قليلاً لـ<strong>ضمان تفعيل كل أوامر وقف الخسارة</strong>.</p>
-        <div class="concept-card accent-border">
-          <div class="concept-card-title">📐 النطاق المتوقع</div>
-          <p>يتوقع ICT تجاوز السعر لهذه المناطق بمقدار <span class="highlight">10 إلى 20 نقطة</span>. في بعض الأحيان يصل إلى 30 نقطة، لكن النطاق العملي هو <strong>10-20 نقطة</strong>.</p>
-        </div>
-        <div class="key-insight">
-          🔬 <strong>علم دقيق لا تخمين:</strong><br>
-          ICT يبحث عن <span class="highlight">مستويات سعرية محددة</span> وليس "مناطق واسعة".<br><br>
-          مثال حقيقي من الحلقة:<br>
-          — أدنى قاع مزدوج = <strong>1.1884</strong><br>
-          — الهدف (20 نقطة تحته) = <span class="highlight">1.1864</span><br>
-          — ليس "منطقة بين 1.1880 و1.1860" بل مستوى محدد: <strong>1.1864</strong>
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-10">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-10</div>
-        <div class="img-placeholder-text">صورة: شارت مع تحديد القاع المزدوج عند 1.1884 والهدف الدقيق 1.1864 (20 نقطة تحته)</div>
-      </div>
-    </div>
-  </div>
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+        }
 
-  <!-- ────────────────────────────
-       القسم 11: بلوك الأوامر البيعي
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-11">
-    <div class="lesson-section-title">
-      <div class="ls-icon orange">🧱</div>
-      <span>11 — بلوك الأوامر البيعي (Bearish ICT Order Block)</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>هنا نصل إلى أداة ICT الأولى: <span class="highlight-o">بلوك الأوامر البيعي</span>.</p>
-        <div class="concept-card orange-border">
-          <div class="concept-card-title">📖 التعريف الدقيق</div>
-          <p>هي <strong>الشمعة (أو الشموع) الصاعدة التي تسبق الحركة الهابطة القوية</strong>، حيث يقوم المال الذكي بالبيع على المكشوف داخلها استعداداً لدفع السعر لأسفل.</p>
-        </div>
-        <div class="key-insight orange">
-          ⚠️ <strong>تحذير مهم جداً:</strong><br>
-          <span class="highlight-r">ليست كل شمعة صاعدة = Bearish Order Block!</span><br>
-          يجب أن يكون وراء الأوردر بلوك <strong>قصة وسياق (Context/Storyline)</strong> يفسر سبب توقعك للحركة الهابطة.
-        </div>
-        <p><strong>ما هو السياق المطلوب؟</strong></p>
-        <ul class="lesson-list orange">
-          <li>وجود <span class="highlight-o">Sell Stops مجمعة</span> أسفل السوق يُتوقع مهاجمتها</li>
-          <li>السعر وصل لمنطقة سيولة (EQL) كهدف</li>
-          <li>الشمعة الصاعدة جاءت قُبيل حركة هابطة قوية مباشرة</li>
-          <li>الإعداد لا يزال صالحاً طالما <strong>لم يتجاوز السعر قمة الشمعة الصاعدة</strong></li>
-        </ul>
-      </div>
-      <div class="img-placeholder" id="img-11">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-11</div>
-        <div class="img-placeholder-text">صورة: ICT Bearish Order Block — الشمعة الصاعدة قبل الحركة الهابطة مع توضيح السياق</div>
-      </div>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p><strong>مثال ثانٍ من الحلقة:</strong> شارت آخر يوضح الأوردر بلوك البيعي في سياق مختلف</p>
-        <ul class="lesson-list orange">
-          <li>المؤسسات <strong>تبيع على المكشوف</strong> داخل الشمعة الصاعدة</li>
-          <li>عندما يعود السعر لاحقاً لهذه الشمعة — هذه فرصتك للدخول</li>
-          <li>طالما لم يكسر السعر قمة شمعة الأوردر بلوك — الإعداد لا يزال صالحاً</li>
-        </ul>
-      </div>
-      <div class="img-placeholder" id="img-12">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-12</div>
-        <div class="img-placeholder-text">صورة: مثال ثانٍ على Bearish Order Block — إعادة الاختبار والدخول</div>
-      </div>
-    </div>
-  </div>
+        .info-item {
+            background: var(--surface2);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
 
-  <!-- ────────────────────────────
-       القسم 12: نقطة الدخول منخفضة المخاطر
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-12">
-    <div class="lesson-section-title">
-      <div class="ls-icon green">🎯</div>
-      <span>12 — نقطة الدخول منخفضة المخاطر (Zero Heat / No Drawdown)</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>بعد تحديد بلوك الأوامر البيعي بسياقه الصحيح، كيف تدخل بأقل مخاطرة ممكنة؟</p>
-        <div class="concept-card green-border">
-          <div class="concept-card-title">🎯 نقطة الدخول المثالية</div>
-          <p>انتظر حتى <span class="highlight-g">يعود السعر صعوداً ويلامس أدنى نقطة (Low) في شمعة الأوردر بلوك الصاعدة</span>.<br><br>
-          في اللحظة التي يلمس فيها السعر هذه النقطة بالضبط — <strong>ادخل بيعاً بسعر السوق (Market Order)</strong>.</p>
-        </div>
-        <div class="key-insight green">
-          ✅ <strong>لماذا هذه أفضل نقطة دخول؟</strong><br>
-          — <span class="highlight-g">Zero Heat</span>: لا تراجع (Drawdown) ضد صفقتك عند الدخول<br>
-          — نقطة دخول <strong>مؤسسية محددة مسبقاً</strong><br>
-          — تعتمد على حساب مسبق لنطاق الربح الكافي<br>
-          — ليست ملاحقة للسعر (وسنشرح لماذا في القسم التالي)
-        </div>
-        <p><strong>ملاحظة:</strong> هذا الدخول مختلف عن الدخول عند مستوى Fibonacci 62-79% (OTE) الذي يعلمه ICT أيضاً — الأوردر بلوك هو بديل ممتاز عندما تفوتك نقطة الفيبوناتشي.</p>
-      </div>
-      <div class="img-placeholder" id="img-13">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-13</div>
-        <div class="img-placeholder-text">صورة: السعر يعود ليلامس أدنى نقطة في شمعة الأوردر بلوك — نقطة الدخول الدقيقة</div>
-      </div>
-    </div>
-  </div>
+        .info-item .i-val {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--accent);
+            font-family: 'Rajdhani', sans-serif;
+        }
 
-  <!-- ────────────────────────────
-       القسم 13: ما هي ملاحقة السعر؟
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-13">
-    <div class="lesson-section-title">
-      <div class="ls-icon">⚠️</div>
-      <span>13 — ما هي ملاحقة السعر (Chasing Price) الحقيقية؟</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>كثير من متابعي ICT يخافون من الدخول خشية أنهم "يلاحقون السعر". يوضح ICT الفرق بدقة:</p>
-        <div class="compare-lesson">
-          <div class="compare-col-lesson retail">
-            <h4>❌ ملاحقة السعر الحقيقية</h4>
-            <ul>
-              <li>الدخول <strong>بعد كسر القاع المزدوج</strong> مباشرة</li>
-              <li>أنت الآن قريب جداً من الأهداف</li>
-              <li>لا هامش ربح كافٍ</li>
-              <li>مخاطرة عالية / عائد منخفض</li>
-            </ul>
-          </div>
-          <div class="compare-col-lesson inst">
-            <h4>✅ ليس ملاحقة للسعر</h4>
-            <ul>
-              <li>الدخول عند <strong>إعادة اختبار الأوردر بلوك</strong></li>
-              <li>السعر لم يصل للهدف بعد</li>
-              <li>هامش ربح كافٍ محسوب مسبقاً</li>
-              <li>Zero Drawdown عند الدخول</li>
-            </ul>
-          </div>
-        </div>
-        <div class="key-insight">
-          📌 <strong>القاعدة البسيطة:</strong><br>
-          إذا كسر السعر الهدف (القاع المزدوج) ودخلت بعده — <span class="highlight-r">هذه ملاحقة.</span><br>
-          إذا دخلت عند إعادة اختبار الأوردر بلوك قبل وصول السعر للهدف — <span class="highlight-g">هذا توقيت مثالي.</span>
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-14">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-14</div>
-        <div class="img-placeholder-text">صورة: الفرق بين ملاحقة السعر (بعد الكسر) والدخول الصحيح (عند الأوردر بلوك)</div>
-      </div>
-    </div>
-  </div>
+        .info-item .i-lbl {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 3px;
+        }
 
-  <!-- ────────────────────────────
-       القسم 14: حساب نطاق الربح
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-14">
-    <div class="lesson-section-title">
-      <div class="ls-icon gold">🧮</div>
-      <span>14 — حساب نطاق الربح المتوقع قبل الدخول</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>قبل الدخول في أي صفقة، يجب حساب <strong>هل هناك هامش ربح كافٍ</strong>. إليك المعادلة البسيطة:</p>
-        <div class="practical-box">
-          <div class="practical-box-title">📊 مثال حقيقي من الحلقة — EURUSD M15</div>
-          <p><strong>نقطة الدخول المتوقعة (Low شمعة الأوردر بلوك):</strong> 1.1891</p>
-          <p><strong>هدف سحب السيولة (20 نقطة تحت أدنى قاع):</strong> 1.1864</p>
-          <p><strong>الحساب:</strong> 1.1891 − 1.1864 = <span style="color:var(--green);font-family:'Rajdhani';font-size:20px;font-weight:700;">27 نقطة</span></p>
-          <div class="pip-calc">
-            <div class="pip-item">
-              <div class="pv">1.1891</div>
-              <div class="pl">نقطة الدخول</div>
+        /* صفحة الاختبار */
+        #page1 {
+            display: none;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 36px 0 28px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 36px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: var(--glow);
+        }
+
+        .series-label {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--accent);
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .header h1 span {
+            color: var(--accent);
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .timer-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer-display {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            transition: color 0.4s;
+        }
+
+        .timer-display.warning {
+            color: var(--gold);
+            animation: pulse 1s infinite;
+        }
+
+        .timer-display.danger {
+            color: var(--red);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1
+            }
+            50% {
+                opacity: 0.5
+            }
+        }
+
+        .score-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 28px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item .val {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--accent);
+            font-family: 'Rajdhani', sans-serif;
+            line-height: 1;
+        }
+
+        .score-item .lbl {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 3px;
+        }
+
+        .progress-wrap {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .progress-track {
+            background: var(--border);
+            border-radius: 99px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            border-radius: 99px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .q-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 18px;
+            transition: border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .q-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--border);
+            transition: background 0.3s;
+        }
+
+        .q-card.correct::before {
+            background: var(--green);
+        }
+
+        .q-card.wrong::before {
+            background: var(--red);
+        }
+
+        .q-number {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .q-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .options {
+            display: grid;
+            gap: 9px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: right;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateX(-3px);
+        }
+
+        .option.correct-ans {
+            border-color: var(--green);
+            background: rgba(0, 255, 136, 0.08);
+        }
+
+        .option.wrong-ans {
+            border-color: var(--red);
+            background: rgba(255, 68, 102, 0.08);
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .opt-letter {
+            width: 27px;
+            height: 27px;
+            border-radius: 6px;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .option.correct-ans .opt-letter {
+            background: var(--green);
+            color: #000;
+        }
+
+        .option.wrong-ans .opt-letter {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .opt-text {
+            font-size: 14px;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            line-height: 1.7;
+            border-right: 3px solid;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: rgba(0, 255, 136, 0.07);
+            border-color: var(--green);
+            color: #a0ffcc;
+        }
+
+        .feedback.wrong {
+            background: rgba(255, 68, 102, 0.07);
+            border-color: var(--red);
+            color: #ffb3c0;
+        }
+
+        /* صفحة النتائج */
+        #page2 {
+            display: none;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .result-grade {
+            font-size: 48px;
+            font-weight: 900;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: var(--surface2);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .stat-card .stat-val {
+            font-size: 24px;
+            font-weight: 900;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .stat-card .stat-lbl {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        /* صفحة الدرس */
+        #pagelesson {
+            display: none;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .lesson-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+        }
+
+        .lesson-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: var(--accent);
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .lesson-back-btn:hover {
+            background: rgba(0, 212, 255, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
+        }
+
+        .lesson-header {
+            text-align: center;
+            padding: 36px 0 28px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 36px;
+        }
+
+        .lesson-badge {
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .lesson-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .lesson-subtitle {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .concepts-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .concept-tag {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: var(--accent);
+        }
+
+        .concept-tag.orange {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: rgba(255, 107, 53, 0.2);
+            color: var(--accent2);
+        }
+
+        .lesson-toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .lesson-toc-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+            background: var(--surface2);
+            border: 1px solid transparent;
+        }
+
+        .toc-item:hover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .toc-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: rgba(0, 212, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .lesson-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ls-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(0, 212, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .ls-icon.orange {
+            background: rgba(255, 107, 53, 0.15);
+        }
+
+        .ls-icon.green {
+            background: rgba(0, 255, 136, 0.15);
+        }
+
+        .ls-icon.gold {
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .lesson-text-box p {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .lesson-text-box .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .lesson-text-box .highlight-o {
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        .lesson-text-box .highlight-r {
+            color: var(--red);
+            font-weight: 600;
+        }
+
+        .lesson-text-box .highlight-g {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .lesson-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .lesson-list li {
+            padding: 6px 0;
+            font-size: 13px;
+            line-height: 1.7;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .lesson-list li::before {
+            content: '•';
+            color: var(--accent);
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .lesson-list.orange li::before {
+            color: var(--accent2);
+        }
+
+        .key-insight {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 16px 0;
+            font-size: 13px;
+            line-height: 1.7;
+            border-right: 3px solid var(--accent);
+            background: rgba(0, 212, 255, 0.06);
+        }
+
+        .key-insight.orange {
+            border-color: var(--accent2);
+            background: rgba(255, 107, 53, 0.06);
+        }
+
+        .key-insight.green {
+            border-color: var(--green);
+            background: rgba(0, 255, 136, 0.06);
+        }
+
+        .key-insight.gold {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.06);
+        }
+
+        .concept-card {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 14px 0;
+            border: 1px solid;
+        }
+
+        .concept-card.accent-border {
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.04);
+        }
+
+        .concept-card.orange-border {
+            border-color: rgba(255, 107, 53, 0.3);
+            background: rgba(255, 107, 53, 0.04);
+        }
+
+        .concept-card.green-border {
+            border-color: rgba(0, 255, 136, 0.3);
+            background: rgba(0, 255, 136, 0.04);
+        }
+
+        .concept-card.gold-border {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.04);
+        }
+
+        .concept-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .concept-card p {
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .compare-lesson {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .compare-col-lesson {
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .compare-col-lesson.retail {
+            background: rgba(255, 68, 102, 0.06);
+            border: 1px solid rgba(255, 68, 102, 0.2);
+        }
+
+        .compare-col-lesson.inst {
+            background: rgba(0, 255, 136, 0.06);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .compare-col-lesson h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .compare-col-lesson ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .compare-col-lesson li {
+            padding: 4px 0;
+        }
+
+        .compare-col-lesson li::before {
+            content: '•';
+            margin-left: 6px;
+            font-weight: bold;
+        }
+
+        .practical-box {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 14px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.04);
+        }
+
+        .practical-box-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .practical-box p {
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 4px 0;
+        }
+
+        .pip-calc {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .pip-item {
+            background: var(--surface2);
+            border-radius: 8px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+
+        .pip-item .pv {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .pip-item .pl {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .img-placeholder {
+            background: var(--surface2);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .img-placeholder-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .img-placeholder-id {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .img-placeholder-text {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* شريط التقدم العائم */
+        .floating-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 10px 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .floating-bar .fb-timer {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .floating-bar .fb-progress {
+            flex: 1;
+            min-width: 120px;
+            max-width: 300px;
+        }
+
+        .floating-bar .fb-track {
+            background: var(--border);
+            border-radius: 99px;
+            height: 4px;
+            overflow: hidden;
+        }
+
+        .floating-bar .fb-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            border-radius: 99px;
+            transition: width 0.3s;
+        }
+
+        /* تراكب انتهاء الوقت */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .overlay-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .overlay-content h3 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .overlay-content p {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        /* تبويب */
+        .swipe-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .swipe-tab {
+            flex: 1;
+            padding: 10px 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .swipe-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .swipe-container {
+            position: relative;
+        }
+
+        .swipe-panel {
+            display: none;
+        }
+
+        .swipe-panel.active {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .compare-lesson {
+                grid-template-columns: 1fr;
+            }
+            .container,
+            .lesson-wrap {
+                padding: 20px 12px 80px;
+            }
+            .hero h1 {
+                font-size: 18px;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+            .channels-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════
+    صفحة 0 — الترحيب
+    ═══════════════════════════════ -->
+    <div id="page0">
+        <div class="container">
+            <!-- الهيرو -->
+            <div class="hero">
+                <div class="hero-badge">📘 مكتبة AK</div>
+                <h1>اختبار <span>ICT Market Maker Primer</span></h1>
+                <p>اختبر فهمك لأهم مفاهيم الحلقة الأولى من سلسلة Market Maker Primer — نظرية صيد السيولة، بلوك الأوامر، ومنهجية المؤسسات في التداول</p>
             </div>
-            <div class="pip-item">
-              <div class="pv">1.1864</div>
-              <div class="pl">الهدف (20 نقطة)</div>
+
+            <!-- القنوات -->
+            <div class="channels-grid">
+                <a href="#" class="ch-card">
+                    <div class="ch-name">📺 قناة ICT الرسمية</div>
+                    <div class="ch-sub">Inner Circle Trader</div>
+                    <div class="ch-desc">المصدر الأساسي لتعليم مفاهيم ICT — Market Maker Primer Course</div>
+                    <span class="ch-join">🔗 زيارة القناة</span>
+                </a>
+                <a href="#" class="ch-card">
+                    <div class="ch-name">📚 مكتبة AK</div>
+                    <div class="ch-sub">Ak Library</div>
+                    <div class="ch-desc">ملخصات واختبارات وشروحات عربية لمفاهيم ICT والتداول المؤسسي</div>
+                    <span class="ch-join">🔗 زيارة المكتبة</span>
+                </a>
             </div>
-            <div class="pip-item">
-              <div class="pv" style="color:var(--green);">27 pip</div>
-              <div class="pl">النطاق المتوقع</div>
+
+            <!-- بانر مجاني -->
+            <div class="free-banner">
+                <span style="display:inline-block;background:var(--green);color:#000;font-weight:900;font-size:11px;padding:3px 10px;border-radius:4px;margin-bottom:8px;">🎁 مجاني</span>
+                <h3>اختبر نفسك مجاناً — لا حاجة للتسجيل</h3>
+                <p>20 سؤالاً تغطي الحلقة الأولى كاملة. احصل على نتيجتك فوراً مع شرح لكل إجابة.</p>
             </div>
-          </div>
-          <p style="margin-top:12px;">27 نقطة كافية لأخذ <strong>صفقة سكالبينج</strong> مربحة. ✅</p>
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-15">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-15</div>
-        <div class="img-placeholder-text">صورة: الشارت مع تحديد نقطة الدخول 1.1891 والهدف 1.1864 ونطاق الربح 27 نقطة</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ────────────────────────────
-       القسم 15: إدارة الصفقة
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-15">
-    <div class="lesson-section-title">
-      <div class="ls-icon orange">📈</div>
-      <span>15 — إدارة الصفقة وجني الأرباح الجزئي (Scaling Profits)</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>بعد الدخول في الصفقة، الإدارة الذكية تتم على مراحل:</p>
-        <div class="concept-card accent-border">
-          <div class="concept-card-title">🎯 الخطة: 3 عقود بيع</div>
-          <p><strong>المرحلة 1 — عند 10 نقاط هبوط:</strong><br>
-          أغلق 2 من 3 عقود (جني ربح جزئي) + حرّك وقف الخسارة إلى نقطة الدخول +1.<br><br>
-          <strong>الآن أنت في وضع مجاني:</strong> العقد الأخير مؤمَّن، لا خسارة ممكنة.<br><br>
-          <strong>المرحلة 2 — تتبع الوقف (Trailing Stop):</strong><br>
-          راقب السعر وهو يكسر قيعاناً قصيرة الأجل، اخفض وقف الخسارة تدريجياً.</p>
-        </div>
-        <div class="key-insight">
-          💡 <strong>الفلسفة:</strong><br>
-          خذ أجزاء صغيرة على طول الطريق لأنك <span class="highlight">لا تعلم يقيناً</span> إذا كان السعر سيصل لهدفه النهائي.<br>
-          المخاطرة الأولية يجب تقليلها إلى نقطة تصبح فيها <strong>غير مؤثرة</strong>.
-        </div>
-        <p><strong>حالة خاصة:</strong> إذا كنت في منطقة انعكاس محتملة والسبريد واسع ولا تستطيع تحريك الوقف — الخيار الأسلم هو <span class="highlight-o">إغلاق الصفقة (Collapse) فوراً</span> والاحتفاظ بالربح المحقق.</p>
-      </div>
-      <div class="img-placeholder" id="img-16">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-16</div>
-        <div class="img-placeholder-text">صورة: تنفيذ الصفقة — 3 لوتات بيع مع خطوات جني الأرباح وتحريك وقف الخسارة</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ────────────────────────────
-       القسم 16: ما بعد سحب السيولة
-  ──────────────────────────────── -->
-  <div class="lesson-section" id="ls-16">
-    <div class="lesson-section-title">
-      <div class="ls-icon green">🚀</div>
-      <span>16 — ما بعد سحب السيولة وكيف تربح حتى عندما تكون مخطئاً</span>
-    </div>
-    <div class="lesson-row">
-      <div class="lesson-text-box">
-        <p>بعد انتهاء عملية سحب السيولة (Stop Raid)، يحدث شيء مثير:</p>
-        <div class="concept-card green-border">
-          <div class="concept-card-title">🚀 ما بعد الـ Stop Raid</div>
-          <p>بعد أن جمع السوق كل Sell Stops وضرب كل من كان في مركز شراء — <span class="highlight-g">السعر يرتفع بقوة كبيرة</span>.<br><br>
-          هذا الارتفاع الحاد هو الدليل على أن الحركة الهابطة كانت مجرد <strong>صيد للسيولة (Stop Hunt)</strong> وليست اتجاهاً حقيقياً.</p>
-        </div>
-        <div class="key-insight green">
-          💰 <strong>كيف تربح حتى عندما تكون مخطئاً في الاتجاه؟</strong><br><br>
-          في مثال الحلقة: وقف الخسارة ضُرب في النهاية — <span class="highlight-r">لكن ICT كان قد جنى أرباحاً على طول الطريق!</span><br><br>
-          عبر جني أرباح جزئي في المستويات المرحلية، قلّص مخاطرته الأولية إلى حد لم تعد فيه مؤثرة. ببساطة: <span class="highlight-g">ربح حتى عندما كان في النهاية "مخطئاً" في تقدير الوجهة النهائية.</span>
-        </div>
-      </div>
-      <div class="img-placeholder" id="img-17">
-        <div class="img-placeholder-icon">🖼️</div>
-        <div class="img-placeholder-id">IMG-17</div>
-        <div class="img-placeholder-text">صورة: الشارت بعد Stop Raid — الارتفاع القوي الذي يؤكد اكتمال عملية صيد السيولة</div>
-      </div>
-    </div>
-
-    <!-- ملخص نهائي -->
-    <div class="concept-card gold-border" style="margin-top:28px;">
-      <div class="concept-card-title" style="font-size:15px;">⭐ الدروس الجوهرية من هذه الحلقة</div>
-      <ul class="lesson-list" style="margin:0;">
-        <li>الأسواق تتحرك بحثاً عن <strong>السيولة</strong> — هذه حقيقة، ليست نظرية</li>
-        <li>القمم والقيعان المتساوية هي <strong>أسهل طريقة لتحديد السيولة</strong> على الشارت</li>
-        <li>فكر دائماً كصانع السوق: <strong>أين وقف الخسارة؟ من الطرف المقابل؟</strong></li>
-        <li>الأوردر بلوك يحتاج <strong>سياقاً وقصة</strong> — ليس مجرد شمعة</li>
-        <li>الدخول عند الأوردر بلوك يعطيك <strong>Zero Drawdown</strong></li>
-        <li>جني الأرباح الجزئي يجعلك <strong>تربح حتى عندما تكون مخطئاً</strong></li>
-        <li>الانضباط + الصبر = <strong>طول العمر في التداول</strong></li>
-        <li>إذا لم تنجح في Demo — <strong>لن تنجح في Live</strong></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- زر الرجوع أسفل الصفحة -->
-  <div style="display:flex;justify-content:center;margin-top:20px;">
-    <button class="lesson-back-btn" onclick="backFromLesson()">
-      → العودة للصفحة الرئيسية وبدء الاختبار
-    </button>
-  </div>
-
-</div>
-</div>
-
-  
-
-      <!-- ══════════════════════════════════════════════
-           شارت الباك تيست المدمج — Bar Replay Engine
-      ══════════════════════════════════════════════ -->
-      <div class="bt-chart-wrapper" id="btChartWrapper">
-
-        <!-- رأس الشارت -->
-        <div class="bt-chart-header">
-          <div class="bt-symbol-row">
-            <span>EUR/USD</span>
-            <span class="bt-tf-badge" id="btTfBadge">M15</span>
-          </div>
-          <div class="bt-ohlc-row" id="btOhlcRow">
-            <span>O: <span class="val" id="btO">—</span></span>
-            <span>H: <span class="up"  id="btH">—</span></span>
-            <span>L: <span class="dn"  id="btL">—</span></span>
-            <span>C: <span class="val" id="btC">—</span></span>
-          </div>
-        </div>
-
-        <!-- حاوية Canvas -->
-        <div id="btChartEl">
-          <div class="bt-end-overlay" id="btEndOverlay">
-            <h3>✅ انتهى الريبلاي</h3>
-            <p>راجع تحليلك ودوّن ملاحظاتك أدناه</p>
-          </div>
-        </div>
-
-        <!-- رفع CSV -->
-        <div class="bt-csv-row">
-          <span class="bt-csv-lbl">📂 بيانات EURUSD:</span>
-          <label class="bt-csv-btn">
-            📁 رفع ملف CSV
-            <input type="file" id="btCsvInput" accept=".csv,.txt" style="display:none">
-          </label>
-          <span class="bt-csv-status" id="btCsvStatus">لم يتم تحميل بيانات — ارفع ملف CSV أو سيُعرض مثال تجريبي</span>
-        </div>
-
-        <!-- شريط تحكم الريبلاي -->
-        <div class="bt-toolbar">
-          <div class="bt-controls">
-            <!-- إعادة تعيين -->
-            <button class="bt-btn" id="btResetBtn" title="إعادة التعيين">⟳</button>
-            <!-- إبطاء -->
-            <button class="bt-btn" id="btSlowerBtn" title="إبطاء">⏮</button>
-            <!-- تشغيل/إيقاف -->
-            <button class="bt-btn bt-play-btn" id="btPlayBtn" title="تشغيل / إيقاف">▶</button>
-            <!-- تسريع -->
-            <button class="bt-btn" id="btFasterBtn" title="تسريع">⏭</button>
-            <!-- شمعة واحدة -->
-            <button class="bt-btn" id="btStepBtn" title="شمعة واحدة للأمام">⏩</button>
-            <!-- مؤشر السرعة -->
-            <span class="bt-speed-lbl" id="btSpeedLbl">×1</span>
-          </div>
-          <!-- شريط التقدم -->
-          <div class="bt-prog-wrap">
-            <div class="bt-prog-track" id="btProgTrack" title="انقر للتنقل">
-              <div class="bt-prog-fill" id="btProgFill" style="width:0%"></div>
+            <!-- معلومات الاختبار -->
+            <div class="card">
+                <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:16px;">📋 معلومات الاختبار</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="i-val">20</div>
+                        <div class="i-lbl">سؤال</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="i-val">20 د</div>
+                        <div class="i-lbl">الوقت المحدد</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="i-val">70%</div>
+                        <div class="i-lbl">درجة النجاح</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="i-val">🎯</div>
+                        <div class="i-lbl">نظري + تطبيقي</div>
+                    </div>
+                </div>
             </div>
-            <div class="bt-prog-lbl" id="btProgLbl">0 / 0 شمعة</div>
-          </div>
+
+            <!-- أزرار البداية -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <button class="btn btn-primary" onclick="startQuiz()" style="width:100%;justify-content:center;">
+                    🚀 ابدأ الاختبار الآن
+                </button>
+                <button class="btn btn-secondary" onclick="showLesson()" style="width:100%;justify-content:center;">
+                    📖 مراجعة الدرس أولاً
+                </button>
+            </div>
         </div>
-
-      </div><!-- /bt-chart-wrapper -->
-
-      <!-- ══ منطقة تسجيل الملاحظات ══ -->
-      <div class="bt-notes-section">
-        <div class="bt-notes-header">
-          <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.3));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">📊</div>
-          <div>
-            <h4>سجّل تحليلك — نوشن أو دفترك</h4>
-            <p>دوّن ما رأيته على الشارت قبل الكشف عن الحل — الكتابة تُرسّخ الفهم</p>
-          </div>
-        </div>
-        <div class="bt-notes-grid">
-
-          <div class="bt-note-field">
-            <div class="bt-note-label">📍 المنطقة التي حددتها</div>
-            <textarea class="bt-note-input" id="btNote1" placeholder="مثال: قيعان مزدوجة عند 1.0820 — Sell Stops مستهدفة..."></textarea>
-          </div>
-
-          <div class="bt-note-field">
-            <div class="bt-note-label">🎯 توقعك للحركة</div>
-            <textarea class="bt-note-input" id="btNote2" placeholder="مثال: أتوقع هبوطاً لسحب السيولة 10-20 نقطة تحت القاع..."></textarea>
-          </div>
-
-          <div class="bt-note-field">
-            <div class="bt-note-label">🕯️ الأوردر بلوك الذي لاحظته</div>
-            <textarea class="bt-note-input" id="btNote3" placeholder="مثال: شمعة صاعدة قبيل الانعكاس — يبدو أن هناك قصة وراءها..."></textarea>
-          </div>
-
-          <div class="bt-note-field">
-            <div class="bt-note-label">📝 ملاحظة حرة</div>
-            <textarea class="bt-note-input" id="btNote4" placeholder="أي ملاحظة إضافية — ما الذي فاجأك؟ ما الذي أربكك؟"></textarea>
-          </div>
-
-        </div>
-        <div class="bt-notes-footer">
-          <p>💡 هذه الملاحظات للاستخدام الشخصي — انسخها لصفحة الجورنال في نوشن بعد انتهائك</p>
-          <button class="bt-save-btn" id="btSaveBtn" onclick="btSaveNotes()">💾 حفظ محلي</button>
-          <span class="bt-saved-msg" id="btSavedMsg">✅ محفوظ!</span>
-        </div>
-      </div><!-- /bt-notes-section -->
-
-      <div class="journal-card">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:10px;">
-          <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--gold),rgba(255,215,0,0.3));display:flex;align-items:center;justify-content:center;font-size:16px;">✍</div>
-          <div>
-            <div style="font-size:15px;font-weight:700;color:#fff;">السؤال التأملي — جورنال نوشن</div>
-            <div style="font-size:12px;color:var(--text-dim);">أضفه في صفحة الجورنال</div>
-          </div>
-        </div>
-        <div class="journal-q">في المرة القادمة التي تنظر فيها إلى الشارت، قبل أي دخول —<br><strong>أين هي وقف خسارة الجميع؟ وهل أنا أتداول معهم أم ضدهم؟</strong></div>
-      </div>
-
-      <!-- زر الانتقال لصفحة النتيجة — أسفل يسار -->
-      <div class="result-nav-wrap">
-        <button class="result-nav-btn" onclick="goToResults()">
-          🏆 عرض النتيجة الكاملة ←
-        </button>
-      </div>
-
-    </div>
     </div>
 
-  </div><!-- /swipe-container -->
+    <!-- ═══════════════════════════════
+    صفحة 1 — الاختبار
+    ═══════════════════════════════ -->
+    <div id="page1">
+        <!-- تبويب -->
+        <div class="swipe-tabs">
+            <div class="swipe-tab active" id="tab-a" onclick="switchTab('a')">
+                📝 الأسئلة
+            </div>
+            <div class="swipe-tab" id="tab-b" onclick="switchTab('b')">
+                📊 التحليل + الجورنال
+            </div>
+        </div>
 
+        <div class="swipe-container">
+            <!-- بانل الأسئلة -->
+            <div class="swipe-panel active" id="panel-a">
+                <div class="container">
+                    <div class="header">
+                        <div class="series-label">ICT • Market Maker Primer</div>
+                        <h1>اختبار <span>الحلقة الأولى</span></h1>
+                        <p>20 سؤالاً — 20 دقيقة — درجة النجاح 70%</p>
+                    </div>
 
-// ══════════════════════════════════════════════════════════
-//  التنقل بين الصفحات
-// ══════════════════════════════════════════════════════════
-function startQuiz() {
-  document.getElementById('page0').style.display = 'none';
-  document.getElementById('page1').style.display = 'block';
-  window.scrollTo({top:0, behavior:'smooth'});
-  buildNewQuiz();
-  startTimer();
-  initFloatingTimer();
-}
+                    <!-- شريط الوقت -->
+                    <div class="top-bar" id="topBar">
+                        <div class="timer-wrap">
+                            <span style="font-size:18px;">⏱️</span>
+                            <div>
+                                <div style="font-size:11px;color:var(--text-dim);">الوقت المتبقي</div>
+                                <div class="timer-display" id="timerDisplay">20:00</div>
+                            </div>
+                        </div>
+                        <div style="width:100%;max-width:220px;height:4px;background:var(--border);border-radius:99px;overflow:hidden;">
+                            <div id="timerBarFill" style="height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:99px;transition:width 1s linear;width:100%;"></div>
+                        </div>
+                    </div>
 
-function switchTab(tab) {
-  document.getElementById('tab-a').classList.toggle('active', tab === 'a');
-  document.getElementById('tab-b').classList.toggle('active', tab === 'b');
-  document.getElementById('panel-a').classList.toggle('active', tab === 'a');
-  document.getElementById('panel-b').classList.toggle('active', tab === 'b');
-  if (tab === 'a') {
-    // في صفحة الأسئلة، نعيد مراقبة .top-bar عبر initFloatingTimer (أو نعيد تشغيل المراقب)
-    if (timerObserver) timerObserver.disconnect();
-    initFloatingTimer();
-  } else {
-    if (floatingTimer) floatingTimer.classList.remove('show');
-    if (timerObserver) timerObserver.disconnect();
-  }
+                    <!-- شريط النتيجة -->
+                    <div class="score-bar">
+                        <div class="score-item">
+                            <div class="val" id="scoreVal">0</div>
+                            <div class="lbl">النتيجة</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="val" id="correctVal" style="color:var(--green);">0</div>
+                            <div class="lbl">صحيح</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="val" id="wrongVal" style="color:var(--red);">0</div>
+                            <div class="lbl">خطأ</div>
+                        </div>
+                        <div class="progress-wrap">
+                            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">التقدم</div>
+                            <div class="progress-track">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;" id="progressText">0 / 20</div>
+                        </div>
+                    </div>
 
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+                    <!-- حاوية الأسئلة -->
+                    <div id="questionsContainer"></div>
 
-function goToResults() {
-  clearInterval(timerInterval);
-  document.getElementById('timeoutOverlay').classList.remove('show');
-  document.getElementById('page1').style.display = 'none';
-  document.getElementById('page2').style.display = 'block';
-  buildResults();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+                    <!-- زر الانتقال للتحليل -->
+                    <div style="display:flex;justify-content:flex-start;margin-top:28px;">
+                        <button class="btn btn-secondary" id="nextToBBtn" disabled onclick="switchTab('b')">
+                            📊 التالي: التحليل + الجورنال ←
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-function restartQuiz() {
-  userAnswers = new Array(20).fill(null); answeredCount = 0; correctCount = 0; wrongCount = 0;
-  ['scoreVal','correctVal','wrongVal'].forEach(id => document.getElementById(id).textContent = '0');
-  document.getElementById('progressFill').style.width = '0%';
-  document.getElementById('progressText').textContent = '0 / 20';
-  const btn = document.getElementById('nextToBBtn'); btn.disabled = true;
-  btn.textContent = '📊 التالي: Backtest + السؤال التأملي ←';
-  document.getElementById('page2').style.display = 'none';
-  document.getElementById('page0').style.display = 'none';
-  document.getElementById('page1').style.display = 'block';
-  switchTab('a');
-  clearInterval(timerInterval);
-  buildNewQuiz();
-  startTimer();
-  window.scrollTo({top:0, behavior:'smooth'});
-  if (floatingTimer) floatingTimer.classList.remove('show');
-  if (timerObserver) timerObserver.disconnect();
-  initFloatingTimer();
+            <!-- بانل التحليل والجورنال -->
+            <div class="swipe-panel" id="panel-b">
+                <div class="container">
+                    <div class="header">
+                        <div class="series-label">ICT • Market Maker Primer</div>
+                        <h1>📊 <span>تحليل + جورنال</span></h1>
+                        <p>دون ملاحظاتك وتأملاتك قبل عرض النتيجة</p>
+                    </div>
 
+                    <!-- كارد الباك تيست -->
+                    <div class="card" style="border-color:rgba(0,212,255,0.3);background:linear-gradient(135deg,#0a1e30,#0f2a40);">
+                        <div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:6px;">🔬 سيناريو الباك تيست</div>
+                        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);border-radius:6px;padding:4px 12px;font-size:12px;color:var(--gold);margin-bottom:16px;">
+                            ⏱️ الإطار الزمني: M15
+                        </div>
+                        <div style="display:grid;gap:13px;">
+                            <div style="display:flex;gap:15px;align-items:flex-start;">
+                                <div style="width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.4));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#000;flex-shrink:0;">1</div>
+                                <div>
+                                    <div style="font-size:13px;font-weight:700;color:#fff;">حدد مناطق السيولة</div>
+                                    <p style="font-size:12px;color:var(--text-dim);line-height:1.7;">ابحث عن القمم والقيعان المتساوية (EQH/EQL) على الشارت. ارسم خطوطاً أفقية.</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:15px;align-items:flex-start;">
+                                <div style="width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.4));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#000;flex-shrink:0;">2</div>
+                                <div>
+                                    <div style="font-size:13px;font-weight:700;color:#fff;">توقع حركة السعر</div>
+                                    <p style="font-size:12px;color:var(--text-dim);line-height:1.7;">هل سيتجه السعر لسحب السيولة فوق القمم أم تحت القيعان؟</p>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:15px;align-items:flex-start;">
+                                <div style="width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),rgba(0,212,255,0.4));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:#000;flex-shrink:0;">3</div>
+                                <div>
+                                    <div style="font-size:13px;font-weight:700;color:#fff;">حدد الأوردر بلوك</div>
+                                    <p style="font-size:12px;color:var(--text-dim);line-height:1.7;">ابحث عن الشمعة التي سبقت الحركة القوية — هل هناك سياق يدعمها؟</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-// ══════════════════════════════════════════════════════════
-//  BACKTEST ENGINE — Bar Replay (مدمج مباشرة)
-// ══════════════════════════════════════════════════════════
+                    <!-- كارد الجورنال -->
+                    <div class="card" style="margin-top:22px;">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                            <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--gold),rgba(255,215,0,0.3));display:flex;align-items:center;justify-content:center;font-size:16px;">✍</div>
+                            <div>
+                                <div style="font-size:15px;font-weight:700;color:#fff;">السؤال التأملي — جورنال نوشن</div>
+                                <div style="font-size:12px;color:var(--text-dim);">أضفه في صفحة الجورنال</div>
+                            </div>
+                        </div>
+                        <div style="font-size:15px;font-weight:700;color:#fff;line-height:1.7;padding:15px;background:rgba(255,215,0,0.05);border-radius:10px;border-right:3px solid var(--gold);">
+                            في المرة القادمة التي تنظر فيها إلى الشارت، قبل أي دخول —<br>
+                            <strong>أين هي وقف خسارة الجميع؟ وهل أنا أتداول معهم أم ضدهم؟</strong>
+                        </div>
+                    </div>
 
-// ─── 1. حالة المحرك ───────────────────────────────────────
-let _btChart        = null;
-let _btCandles_ref  = null;
-let _btSeries       = null;
-let _btIndex        = 0;
-let _btPlaying      = false;
-let _btSpeed        = 1;
-let _btTimer        = null;
-const _btSpeedMap   = { 0.25: 1600, 0.5: 800, 1: 400, 2: 200, 4: 100 };
-const _btSpeedLvls  = [0.25, 0.5, 1, 2, 4];
-const BT_VISIBLE    = 80; // عدد الشمعات المرئية
+                    <!-- زر عرض النتيجة -->
+                    <div style="display:flex;justify-content:flex-start;margin-top:28px;">
+                        <button class="btn btn-success" onclick="goToResults()">
+                            🏆 عرض النتيجة الكاملة ←
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-// ─── 2. بيانات تجريبية (عند عدم رفع CSV) ────────────────
-function _btGenerateSampleData() {
-  const candles = [];
-  let t   = Math.floor(new Date('2024-01-15T08:00:00Z').getTime() / 1000);
-  let price = 1.08500;
-  for (let i = 0; i < 300; i++) {
-    const d  = (Math.random() - 0.49) * 0.0012;
-    const rng = Math.random() * 0.0008 + 0.0002;
-    const o  = parseFloat(price.toFixed(5));
-    const c  = parseFloat((price + d).toFixed(5));
-    const h  = parseFloat((Math.max(o, c) + Math.random() * rng * 0.5).toFixed(5));
-    const l  = parseFloat((Math.min(o, c) - Math.random() * rng * 0.5).toFixed(5));
-    candles.push({ time: t, open: o, high: h, low: l, close: c, volume: Math.floor(Math.random() * 2000 + 500) });
-    t    += 900; // 15 دقيقة
-    price = c;
-  }
-  return candles;
-}
-// ─── 3. تحليل CSV ─────────────────────────────────────────
-function _btParseCSV(text) {
-  const lines = text.trim().split('\n').map(l => l.trim()).filter(Boolean);
-  if (lines.length < 1) throw new Error('الملف فارغ');
-  const sep = lines[0].includes('\t') ? '\t' : lines[0].includes(';') ? ';' : ',';
-  const firstParts = lines[0].split(sep).map(s => s.trim().toLowerCase().replace(/['"]/g,''));
+    <!-- ═══════════════════════════════
+    صفحة 2 — النتائج
+    ═══════════════════════════════ -->
+    <div id="page2">
+        <div class="container">
+            <div class="header">
+                <div class="series-label">ICT • Market Maker Primer</div>
+                <h1>🏆 <span>نتيجتك</span></h1>
+                <p>مراجعة شاملة لأدائك في اختبار الحلقة الأولى</p>
+            </div>
 
-  // هل السطر الأول header أم بيانات؟ (عمود open = رقم → بيانات)
-  const isHeaderRow = isNaN(parseFloat(firstParts[2]));
-  const dataStart   = isHeaderRow ? 1 : 0;
-  const hdr         = isHeaderRow ? firstParts : null;
+            <!-- كارد النتيجة الرئيسي -->
+            <div class="result-card" id="resultMainCard"></div>
 
-  let dtIdx, tmIdx = -1, oIdx, hIdx, lIdx, cIdx, vIdx = -1;
+            <!-- مراجعة الأسئلة -->
+            <div id="reviewContainer"></div>
 
-  if (hdr) {
-    const find = (a) => { for (const x of a) { const i=hdr.indexOf(x); if(i!==-1)return i; } return -1; };
-    dtIdx = find(['datetime','date_time','timestamp','date']);
-    tmIdx = find(['time','hour']);
-    oIdx  = find(['open','o']);
-    hIdx  = find(['high','h','max']);
-    lIdx  = find(['low','l','min']);
-    cIdx  = find(['close','c','last']);
-    vIdx  = find(['volume','vol','v','tickvol','tick_vol']);
-    if (oIdx === -1 && hdr.length >= 5) { dtIdx=0; oIdx=1; hIdx=2; lIdx=3; cIdx=4; vIdx=hdr.length>=6?5:-1; }
-  } else {
-    const cols = firstParts.length;
-    if      (cols >= 7) { dtIdx=0; tmIdx=1; oIdx=2; hIdx=3; lIdx=4; cIdx=5; vIdx=6; }
-    else if (cols === 6){ dtIdx=0; oIdx=1; hIdx=2; lIdx=3; cIdx=4; vIdx=5; }
-    else if (cols === 5){ dtIdx=0; oIdx=1; hIdx=2; lIdx=3; cIdx=4; }
-    else throw new Error('عدد أعمدة غير متوقع: ' + cols);
-  }
+            <!-- أزرار -->
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:24px;">
+                <button class="btn btn-primary" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+                <button class="btn btn-secondary" onclick="showLesson()">📖 مراجعة الدرس</button>
+                <button class="btn btn-secondary" onclick="backToHome()">🏠 الصفحة الرئيسية</button>
+            </div>
+        </div>
+    </div>
 
-  const candles = [];
-  for (let i = dataStart; i < lines.length; i++) {
-    const p = lines[i].split(sep).map(s => s.trim().replace(/['"]/g,''));
-    if (p.length < 5) continue;
-    let raw = dtIdx !== -1 ? p[dtIdx] : '';
-    if (tmIdx !== -1 && p[tmIdx]) raw += ' ' + p[tmIdx];
-    if (!raw) continue;
-    let ts;
-    if (/^\d{9,13}$/.test(raw)) {
-      const n=parseInt(raw,10); ts=n>1e10?Math.floor(n/1000):n;
-    } else {
-      const norm = raw.replace(/^(\d{4})\.(\d{2})\.(\d{2})/, '$1-$2-$3').replace(' ','T');
-      const d = new Date(norm);
-      if (isNaN(d.getTime())) continue;
-      ts = Math.floor(d.getTime()/1000);
-    }
-    const o=parseFloat(p[oIdx]),h=parseFloat(p[hIdx]),l=parseFloat(p[lIdx]),c=parseFloat(p[cIdx]);
-    const v=vIdx!==-1?parseFloat(p[vIdx]):0;
-    if ([o,h,l,c].some(isNaN)) continue;
-    candles.push({time:ts,open:o,high:h,low:l,close:c,volume:v});
-  }
-  if (candles.length===0) throw new Error('لم يتم استخراج أي شمعات — تحقق من صيغة الملف');
-  candles.sort((a,b)=>a.time-b.time);
-  const seen=new Set();
-  return candles.filter(c=>{ if(seen.has(c.time))return false; seen.add(c.time); return true; });
-}
+    <!-- ═══════════════════════════════
+    صفحة الدرس
+    ═══════════════════════════════ -->
+    <div id="pagelesson">
+        <div class="lesson-wrap">
+            <button class="lesson-back-btn" onclick="backFromLesson()">→ العودة للصفحة الرئيسية</button>
 
+            <div class="lesson-header">
+                <div class="lesson-badge">📘 مكتبة AK · Market Maker Primer Course · ICT</div>
+                <div class="lesson-title">ما الذي يجب على المتداولين الجدد التركيز عليه</div>
+                <div class="lesson-subtitle">ملخص محسن ومكتمل للحلقة الأولى — الحلقة النصية الكاملة + الملاحظات الرسمية</div>
+                <div class="concepts-list">
+                    <span class="concept-tag">🎯 نظرية صيد السيولة</span>
+                    <span class="concept-tag">📍 مناطق السيولة</span>
+                    <span class="concept-tag orange">🧱 بلوك الأوامر</span>
+                    <span class="concept-tag orange">🎯 دخول عالي الدقة</span>
+                    <span class="concept-tag">📉 Zero Drawdown</span>
+                    <span class="concept-tag">📊 Scaling Profits</span>
+                </div>
+            </div>
 
-// ─── 4. تهيئة الشارت ──────────────────────────────────────
-function _btInitChart(candles) {
-  _btCandles_ref = candles;
-  const el = document.getElementById('btChartEl');
-  if (!el) return;
+            <!-- فهرس المحتوى -->
+            <div class="lesson-toc">
+                <div class="lesson-toc-title">📋 محتويات الدرس</div>
+                <div class="toc-grid">
+                    <a class="toc-item" href="#ls-01"><span class="toc-num">01</span>لماذا هذه الدروس؟</a>
+                    <a class="toc-item" href="#ls-02"><span class="toc-num">02</span>من يستفيد أكثر؟</a>
+                    <a class="toc-item" href="#ls-03"><span class="toc-num">03</span>السعر فركتلي</a>
+                    <a class="toc-item" href="#ls-04"><span class="toc-num">04</span>ما الذي يحرك السعر؟</a>
+                    <a class="toc-item" href="#ls-05"><span class="toc-num">05</span>القمم والقيعان المتساوية</a>
+                    <a class="toc-item" href="#ls-06"><span class="toc-num">06</span>مؤسسات vs تجزئة</a>
+                    <a class="toc-item" href="#ls-07"><span class="toc-num">07</span>منهجية الدراسة</a>
+                    <a class="toc-item" href="#ls-08"><span class="toc-num">08</span>الحساب التجريبي</a>
+                    <a class="toc-item" href="#ls-09"><span class="toc-num">09</span>الأهداف الأسبوعية</a>
+                </div>
+            </div>
 
-  // تدمير القديم
-  if (_btChart) { try { _btChart.remove(); } catch(e){} _btChart=null; _btSeries=null; }
+            <!-- القسم 1 -->
+            <div class="lesson-section" id="ls-01">
+                <div class="lesson-section-title"><div class="ls-icon">💡</div><span>01 — لماذا هذه الدروس؟ — نظرة ICT الشخصية</span></div>
+                <div class="lesson-text-box">
+                    <p>هذه الدروس صُممت لتكون <strong>أقصر وأكثر تركيزاً وأكثر كثافة</strong> بالمحتوى مقارنة بدروس ICT القديمة، مع الحفاظ على إمكانية الإدارة الزمنية لكل درس.</p>
+                    <p>ICT نفسه كان متداولاً في <span class="highlight">الأسهم والسندات والسلع وعقود العملات الآجلة (Futures)</span> لأكثر من عقد قبل دخول سوق الفوركس. ورغم هذه الخبرة الواسعة، وقع في نفس أخطاء المبتدئين في الفوركس بسبب طبيعة السوق الجذابة:</p>
+                    <ul class="lesson-list">
+                        <li>السوق يعمل <strong>24 ساعة</strong> — وهذا يشبه متجر حلوى مفتوح طوال اليوم!</li>
+                        <li>سيولة عالية جداً وحركة سعر سريعة</li>
+                        <li>يمنح فرصاً للتداول اليومي والسكالبينج والسوينج والبوزيشن تريدينج</li>
+                        <li>الإثارة + التوافر المستمر = فخ عاطفي حتى للمحترفين</li>
+                    </ul>
+                    <div class="key-insight">
+                        💬 <em>"تعلمت من أخطائي على مدار السنوات، وهذه الفيديوهات ستساعدك على تجنب كثير من المزالق التي وقعت فيها."</em> — ICT
+                    </div>
+                </div>
+                <div class="img-placeholder">
+                    <div class="img-placeholder-icon">🖼️</div>
+                    <div class="img-placeholder-id">IMG-01</div>
+                    <div class="img-placeholder-text">صورة: نظرة عامة على سوق الفوركس كما يراه ICT</div>
+                </div>
+            </div>
 
-  _btChart = LightweightCharts.createChart(el, {
-    width:  el.clientWidth || 700,
-    height: 320,
-    layout: {
-      background: { type: 'solid', color: '#050a0f' },
-      textColor:  '#c8dde8',
-      fontSize:   11,
-      fontFamily: "'Rajdhani','Cairo',sans-serif",
-    },
-    grid: {
-      vertLines: { color: 'rgba(26,58,92,0.4)', style: 1 },
-      horzLines: { color: 'rgba(26,58,92,0.4)', style: 1 },
-    },
-    crosshair: {
-      mode: 1,
-      vertLine: { color: 'rgba(0,212,255,0.4)', labelBackgroundColor: '#0a1520' },
-      horzLine: { color: 'rgba(0,212,255,0.4)', labelBackgroundColor: '#0a1520' },
-    },
-    rightPriceScale: { borderColor: '#1a3a5c', scaleMargins: { top: 0.08, bottom: 0.12 } },
-    timeScale: { borderColor: '#1a3a5c', timeVisible: true, secondsVisible: false, rightOffset: 10, barSpacing: 7 },
-    handleScroll: true,
-    handleScale:  true,
-  });
+            <!-- القسم 2 -->
+            <div class="lesson-section" id="ls-02">
+                <div class="lesson-section-title"><div class="ls-icon orange">🧠</div><span>02 — من يستفيد أكثر من تعلم ICT؟</span></div>
+                <div class="lesson-text-box">
+                    <p>هنا مفاجأة قد تكون صادمة: <span class="highlight-o">المبتدئ تماماً بدون أي خلفية تقليدية يمتلك ميزة واضحة</span> على من درس مدارس التجزئة الأخرى.</p>
+                    <p><strong>لماذا؟</strong> لأن ICT يتعارض تماماً مع:</p>
+                    <ul class="lesson-list orange">
+                        <li><span class="highlight-r">موجات إليوت (Elliott Waves)</span> — تُشتت انتباهك عن حركة السعر الحقيقية</li>
+                        <li><span class="highlight-r">العرض والطلب (Supply & Demand)</span> — مفهوم مختلف تماماً عن ICT</li>
+                        <li><span class="highlight-r">الهارمونيك (Harmonic Patterns)</span> — نماذج تزيد التعقيد دون فائدة حقيقية</li>
+                        <li><span class="highlight-r">النماذج الحيوانية (Animal Patterns)</span> — كل هذه مشتتات على الشارت</li>
+                        <li>أي مؤشرات فنية تقليدية (RSI, MACD, Bollinger...)</li>
+                    </ul>
+                    <div class="key-insight orange">
+                        ⚠️ <strong>تحذير:</strong> إذا كنت قد تعلمت أياً من المدارس أعلاه، ستواجه صعوبة في إعادة برمجة تفكيرك. <span class="highlight-o">ICT يتطلب التفكير بشكل معاكس تماماً</span> لما تعلمته.
+                    </div>
+                    <p>كل ما تحتاجه حقاً للقراءة على الشارت هو: <span class="highlight">الافتتاح (O) · الأعلى (H) · الأدنى (L) · الإغلاق (C)</span></p>
+                </div>
+                <div class="img-placeholder">
+                    <div class="img-placeholder-icon">🖼️</div>
+                    <div class="img-placeholder-id">IMG-02</div>
+                    <div class="img-placeholder-text">صورة: شارت نظيف بدون مؤشرات مقابل شارت مليء بالمؤشرات التقليدية</div>
+                </div>
+            </div>
 
-  // LightweightCharts v5: addSeries(SeriesType, options)
-  const useLegacyAPI = typeof _btChart.addCandlestickSeries === 'function';
-  if (useLegacyAPI) {
-    _btSeries = _btChart.addCandlestickSeries({
-      upColor: '#00ff88', downColor: '#ff4466',
-      borderUpColor: '#00ff88', borderDownColor: '#ff4466',
-      wickUpColor: '#00cc66', wickDownColor: '#cc2244',
-    });
-  } else {
-    _btSeries = _btChart.addSeries(LightweightCharts.CandlestickSeries, {
-      upColor: '#00ff88', downColor: '#ff4466',
-      borderUpColor: '#00ff88', borderDownColor: '#ff4466',
-      wickUpColor: '#00cc66', wickDownColor: '#cc2244',
-    });
-  }
+            <!-- القسم 3 -->
+            <div class="lesson-section" id="ls-03">
+                <div class="lesson-section-title"><div class="ls-icon">🔄</div><span>03 — السعر ذو طبيعة فركتلية (Fractal)</span></div>
+                <div class="lesson-text-box">
+                    <p>مفهوم أساسي يجب استيعابه جيداً: <span class="highlight">السعر فركتلي</span>، بمعنى أن:</p>
+                    <ul class="lesson-list">
+                        <li>ما تراه على إطار زمني معين، <strong>يمكن رؤيته بنفس الشكل</strong> على الأطر الأعلى والأدنى</li>
+                        <li>نفس نوع التكوين (Formation) أو الإعداد (Setup) يتكرر على كل إطار زمني</li>
+                        <li>الأطر الزمنية المختلفة لا تعني قواعد مختلفة — المبادئ واحدة</li>
+                    </ul>
+                    <div class="key-insight green">
+                        ✅ <strong>الفائدة العملية:</strong> يمكنك التدرب والدراسة على إطار <span class="highlight-g">M15</span> وستجد نفس الظواهر على H1, H4, Daily وأي إطار آخر. اختر إطاراً واحداً وأتقن الرؤية فيه.
+                    </div>
+                </div>
+                <div class="img-placeholder">
+                    <div class="img-placeholder-icon">🖼️</div>
+                    <div class="img-placeholder-id">IMG-03</div>
+                    <div class="img-placeholder-text">صورة: نفس النمط السعري يظهر على M15 وH4 وDaily معاً</div>
+                </div>
+            </div>
 
-  // Resize observer
-  const ro = new ResizeObserver(() => {
-    if(_btChart) _btChart.applyOptions({ width: el.clientWidth });
-  });
-  ro.observe(el);
+            <!-- القسم 4 -->
+            <div class="lesson-section" id="ls-04">
+                <div class="lesson-section-title"><div class="ls-icon">💰</div><span>04 — ما الذي يجعل السعر يتحرك إلى مستويات معينة؟</span></div>
+                <div class="lesson-text-box">
+                    <p>هذا السؤال هو <span class="highlight">جوهر كل شيء في ICT</span>. بدون فهم الإجابة، احتمالية نجاحك في التداول تقترب من الصفر.</p>
+                    <div class="concept-card accent-border">
+                        <div class="concept-card-title">🎯 الإجابة: السيولة (Liquidity)</div>
+                        <p>الأسواق تتحرك دائماً ذهاباً وإياباً بحثاً عن <strong>السيولة</strong> — أي أوامر وقف الخسارة المتراكمة فوق القمم وتحت القيعان.</p>
+                    </div>
+                    <div class="concept-card orange-border">
+                        <div class="concept-card-title">💡 فكر هكذا دائماً</div>
+                        <p>قبل أي تداول، اسأل نفسك: <span class="highlight-o">"أين ستكون وقف الخسارة للمتداولين الآخرين؟"</span> هذا هو تفكير صانع السوق.</p>
+                    </div>
+                </div>
+            </div>
 
-  // عرض OHLC عند الـ crosshair
-  _btChart.subscribeCrosshairMove(p => {
-    if (!p.seriesData) return;
-    const d = p.seriesData.get(_btSeries);
-    if (!d) return;
-    document.getElementById('btO').textContent = d.open?.toFixed(5)  ?? '—';
-    document.getElementById('btH').textContent = d.high?.toFixed(5)  ?? '—';
-    document.getElementById('btL').textContent = d.low?.toFixed(5)   ?? '—';
-    document.getElementById('btC').textContent = d.close?.toFixed(5) ?? '—';
-  });
+            <!-- القسم 5 -->
+            <div class="lesson-section" id="ls-05">
+                <div class="lesson-section-title"><div class="ls-icon orange">📊</div><span>05 — القمم والقيعان المتساوية (Equal Highs / Equal Lows)</span></div>
+                <div class="lesson-text-box">
+                    <p>هذه هي <span class="highlight-o">أسهل وأوضح نقطة سعرية</span> يمكنك رؤيتها في الشارت.</p>
+                    <p><strong>التعريف:</strong> أي منطقة فيها قمتان أو أكثر عند نفس المستوى تقريباً (Double Top)، أو قاعان عند نفس المستوى تقريباً (Double Bottom).</p>
+                    <div class="key-insight">
+                        📌 <strong>التطبيق العملي:</strong> ارسم <strong>خطاً أفقياً صغيراً</strong> فوق القمم المتساوية وأسفل القيعان المتساوية. اكتب بجانبها: فوق القمم <span class="highlight"><strong>Buy Stops</strong></span>، تحت القيعان <span class="highlight-r"><strong>Sell Stops</strong></span>.
+                    </div>
+                </div>
+            </div>
 
-  // تهيئة المحرك بـ N شمعة أولى
-  _btIndex = Math.min(BT_VISIBLE, candles.length);
-  _btSeries.setData(candles.slice(0, _btIndex));
-  _btFitVisible();
-  _btUpdateUI();
-}
+            <!-- القسم 6 -->
+            <div class="lesson-section" id="ls-06">
+                <div class="lesson-section-title"><div class="ls-icon green">⚖️</div><span>06 — كيف تفكر المؤسسات مقابل متداولي التجزئة؟</span></div>
+                <div class="lesson-text-box">
+                    <div class="compare-lesson">
+                        <div class="compare-col-lesson retail">
+                            <h4>❌ متداول التجزئة (Retail)</h4>
+                            <ul>
+                                <li>يرى Double Bottom = دعم قوي للشراء</li>
+                                <li>يرى Double Top = مقاومة قوية للبيع</li>
+                                <li>يضع وقف خسارته تحت القاع السابق</li>
+                            </ul>
+                        </div>
+                        <div class="compare-col-lesson inst">
+                            <h4>✅ المتداول المؤسسي (Institutional)</h4>
+                            <ul>
+                                <li>يرى Double Bottom = <strong>مجمع Sell Stops</strong> تحته</li>
+                                <li>يرى Double Top = <strong>مجمع Buy Stops</strong> فوقه</li>
+                                <li>يستهدف هذه الأوامر لإيجاد الطرف المقابل</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-// ─── 5. منطق الريبلاي ─────────────────────────────────────
-function _btTick() {
-  if (!_btPlaying) return;
-  _btAddOne();
-  _btFitVisible();
-  if (_btIndex >= _btCandles_ref.length) {
-    _btPlaying = false;
-    _btUpdatePlayBtn();
-    document.getElementById('btEndOverlay').classList.add('show');
-    return;
-  }
-  _btTimer = setTimeout(_btTick, _btSpeedMap[_btSpeed] ?? 400);
-}
+            <!-- القسم 7 -->
+            <div class="lesson-section" id="ls-07">
+                <div class="lesson-section-title"><div class="ls-icon gold">📚</div><span>07 — منهجية الدراسة الصحيحة (شهر كامل)</span></div>
+                <div class="lesson-text-box">
+                    <p>قبل أن تضع أي صفقة تجريبية، ICT يطلب منك القيام بما يلي <strong>لمدة شهر كامل</strong>:</p>
+                    <ul class="lesson-list">
+                        <li>اختر <span class="highlight">زوجاً أو زوجين فقط</span> (مثل EURUSD أو GBPUSD)</li>
+                        <li>استخدم إطار زمني <span class="highlight">M15</span></li>
+                        <li><strong>لا تتداول!</strong> فقط راقب وسجل</li>
+                        <li>حدد كل القمم والقيعان المتساوية بخط أفقي وتوضيح نصي</li>
+                    </ul>
+                </div>
+            </div>
 
-function _btAddOne() {
-  if (!_btCandles_ref || _btIndex >= _btCandles_ref.length) return;
-  const c = _btCandles_ref[_btIndex];
-  _btSeries.update(c);
-  _btIndex++;
-  _btUpdateUI();
-  // تحديث OHLC
-  document.getElementById('btO').textContent = c.open.toFixed(5);
-  document.getElementById('btH').textContent = c.high.toFixed(5);
-  document.getElementById('btL').textContent = c.low.toFixed(5);
-  document.getElementById('btC').textContent = c.close.toFixed(5);
-}
+            <!-- القسم 8 -->
+            <div class="lesson-section" id="ls-08">
+                <div class="lesson-section-title"><div class="ls-icon">🧪</div><span>08 — الحساب التجريبي (Demo) — صندوق الرمل</span></div>
+                <div class="lesson-text-box">
+                    <div class="key-insight">
+                        🔴 <strong>قاعدة ذهبية لا استثناء فيها:</strong> "إذا لم تكن تحقق أرباحاً في الحساب التجريبي، <span class="highlight-r">لن تحقق في الحساب الحقيقي</span>."
+                    </div>
+                </div>
+            </div>
 
-function _btFitVisible() {
-  if (!_btChart || !_btCandles_ref) return;
-  const total = _btIndex;
-  const from  = Math.max(0, total - BT_VISIBLE);
-  const f = _btCandles_ref[from]?.time;
-  const t = _btCandles_ref[total-1]?.time;
-  if (f && t) _btChart.timeScale().setVisibleRange({ from: f, to: t });
-}
+            <!-- القسم 9 -->
+            <div class="lesson-section" id="ls-09">
+                <div class="lesson-section-title"><div class="ls-icon gold">🎯</div><span>09 — الأهداف الأسبوعية وتعليم الانضباط والصبر</span></div>
+                <div class="lesson-text-box">
+                    <p>للمتداول الجديد، ICT يقترح هدفاً أسبوعياً <span class="highlight">منخفضاً جداً</span> — وهذا مقصود:</p>
+                    <div class="concept-card gold-border">
+                        <div class="concept-card-title">📊 الهدف الأسبوعي المقترح</div>
+                        <p><span class="highlight">20 إلى 30 نقطة</span> فقط في الأسبوع للبداية. بعد تحقيق الهدف: <strong>توقف فوراً!</strong></p>
+                    </div>
+                </div>
+            </div>
 
-function _btUpdateUI() {
-  if (!_btCandles_ref) return;
-  const pct = (_btIndex / _btCandles_ref.length) * 100;
-  document.getElementById('btProgFill').style.width = pct + '%';
-  document.getElementById('btProgLbl').textContent  = `${_btIndex} / ${_btCandles_ref.length} شمعة`;
-}
+            <!-- زر الرجوع -->
+            <div style="display:flex;justify-content:center;margin-top:20px;">
+                <button class="lesson-back-btn" onclick="backFromLesson()">→ العودة للصفحة الرئيسية وبدء الاختبار</button>
+            </div>
+        </div>
+    </div>
 
-function _btUpdatePlayBtn() {
-  const btn = document.getElementById('btPlayBtn');
-  if (_btPlaying) { btn.textContent = '⏸'; btn.classList.add('playing'); btn.title = 'إيقاف مؤقت'; }
-  else            { btn.textContent = '▶'; btn.classList.remove('playing'); btn.title = 'تشغيل'; }
-}
+    <!-- ═══════════════════════════════
+    تراكب انتهاء الوقت
+    ═══════════════════════════════ -->
+    <div class="overlay" id="timeoutOverlay">
+        <div class="overlay-content">
+            <h3>⏰ انتهى الوقت!</h3>
+            <p>لقد انتهت الـ 20 دقيقة المخصصة للاختبار. سيتم عرض نتيجتك بناءً على ما أجبت عليه.</p>
+            <button class="btn btn-primary" onclick="goToResults()" style="width:100%;justify-content:center;">عرض النتيجة</button>
+        </div>
+    </div>
 
-// ─── 6. ربط أزرار التحكم ──────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
+    <!-- شريط التقدم العائم -->
+    <div class="floating-bar" id="floatingBar" style="display:none;">
+        <div class="fb-timer" id="fbTimer">20:00</div>
+        <div class="fb-progress">
+            <div class="fb-track"><div class="fb-fill" id="fbFill" style="width:0%;"></div></div>
+        </div>
+        <span style="font-size:11px;color:var(--text-dim);" id="fbProgressText">0/20</span>
+    </div>
 
-  // تشغيل/إيقاف
-  document.getElementById('btPlayBtn').addEventListener('click', () => {
-    if (!_btCandles_ref) return;
-    if (_btPlaying) {
-      _btPlaying = false;
-      if (_btTimer) { clearTimeout(_btTimer); _btTimer=null; }
-    } else {
-      if (_btIndex >= _btCandles_ref.length) return;
-      _btPlaying = true;
-      _btTick();
-    }
-    _btUpdatePlayBtn();
-  });
+    <script>
+        // ══════════════════════════════════════════════════════════
+        //  قاعدة بيانات الأسئلة (20 سؤالاً)
+        // ══════════════════════════════════════════════════════════
+        const questionsDB = [
+            { id: 1, type: 'theory',
+                q: 'ما هو المحرك الأساسي لحركة السعر وفقاً لمفاهيم ICT؟',
+                options: ['العرض والطلب', 'السيولة — أوامر وقف الخسارة المتراكمة', 'المؤشرات الفنية', 'الأخبار الاقتصادية'],
+                correct: 1, feedback: 'السيولة هي المحرك الأساسي. الأسواق تتحرك بحثاً عن أوامر وقف الخسارة المتراكمة فوق القمم وتحت القيعان.' },
+            { id: 2, type: 'theory',
+                q: 'ما هي "القمم المتساوية" (Equal Highs) في مفهوم ICT؟',
+                options: ['قمتان عند نفس المستوى تقريباً — منطقة Buy Stops', 'قمتان عند نفس المستوى — منطقة Sell Stops',
+                    'أعلى نقطة في اليوم', 'نقطة دخول للشراء'
+                ],
+                correct: 0, feedback: 'القمم المتساوية هي منطقة تجمع Buy Stops — أوامر الشراء المعلقة فوق المقاومة.' },
+            { id: 3, type: 'practical',
+                q: 'إذا رأيت قاعين مزدوجين (Double Bottom) على الشارت، ماذا يعني ذلك لمتداول ICT؟',
+                options: ['فرصة شراء قوية', 'منطقة تجمع Sell Stops — السعر قد يهبط لتفعيلها', 'انعكاس صعودي مؤكد',
+                    'لا معنى له'
+                ],
+                correct: 1, feedback: 'القيعان المزدوجة = Sell Stops مجمعة تحتها. المؤسسات تستهدف هذه الأوامر.' },
+            { id: 4, type: 'theory',
+                q: 'ما هو "بلوك الأوامر البيعي" (Bearish Order Block)؟',
+                options: ['أي شمعة حمراء كبيرة', 'الشمعة الصاعدة التي تسبق حركة هابطة قوية',
+                    'الشمعة الهابطة التي تسبق حركة صاعدة', 'نموذج انعكاسي تقليدي'
+                ],
+                correct: 1, feedback: 'بلوك الأوامر البيعي هو الشمعة (أو الشموع) الصاعدة التي تسبق الحركة الهابطة القوية.' },
+            { id: 5, type: 'practical',
+                q: 'أين يضع ICT نقطة دخوله المثالية عند التداول على بلوك أوامر بيعي؟',
+                options: ['عند كسر القاع مباشرة', 'عند إعادة اختبار أدنى نقطة في شمعة الأوردر بلوك الصاعدة',
+                    'عند القمة الجديدة', 'بعد الإغلاق تحت القاع المزدوج'
+                ],
+                correct: 1, feedback: 'نقطة الدخول المثالية هي إعادة اختبار Low شمعة الأوردر بلوك — Zero Drawdown.' },
+            { id: 6, type: 'theory',
+                q: 'ما هي "ملاحقة السعر" (Chasing Price) الحقيقية وفقاً لـ ICT؟',
+                options: ['الدخول عند إعادة اختبار الأوردر بلوك', 'الدخول بعد كسر القاع المزدوج مباشرة',
+                    'وضع أمر معلق', 'استخدام أمر وقف الخسارة'
+                ],
+                correct: 1, feedback: 'ملاحقة السعر هي الدخول بعد كسر الهدف — لا هامش ربح كافٍ، مخاطرة عالية.' },
+            { id: 7, type: 'practical',
+                q: 'إذا كان أدنى قاع مزدوج عند 1.1884، أين تتوقع أن يصل السعر لسحب السيولة؟',
+                options: ['1.1884 بالضبط', '1.1864 تقريباً (20 نقطة تحته)', '1.1904 (20 نقطة فوقه)', '1.1800'],
+                correct: 1, feedback: 'السعر يتجاوز القاع بـ 10-20 نقطة لتفعيل كل Sell Stops — الهدف ≈ 1.1864.' },
+            { id: 8, type: 'theory',
+                q: 'من يستفيد أكثر من تعلم ICT حسب ما ذكره ICT نفسه؟',
+                options: ['المتداول المحترف', 'المبتدئ تماماً بدون خلفية تقليدية', 'محلل الموجات', 'خبير المؤشرات'],
+                correct: 1, feedback: 'المبتدئ بدون خلفية تقليدية يمتلك ميزة — لا يحتاج "لإعادة برمجة" تفكيره.' },
+            { id: 9, type: 'theory',
+                q: 'ما هي خاصية "فركتلية" السعر (Fractal)؟',
+                options: ['السعر عشوائي', 'نفس الأنماط تتكرر على جميع الأطر الزمنية', 'السعر يتبع فيبوناتشي فقط',
+                    'الأسواق مغلقة'
+                ],
+                correct: 1, feedback: 'السعر فركتلي — نفس التكوينات تظهر على M15 و H4 و Daily.' },
+            { id: 10, type: 'practical',
+                q: 'كم نقطة يقترح ICT كهدف أسبوعي للمتداول الجديد؟',
+                options: ['100-200 نقطة', '20-30 نقطة فقط', '50-70 نقطة', '500 نقطة'],
+                correct: 1, feedback: '20-30 نقطة أسبوعياً — هدف منخفض لتعليم الانضباط والصبر.' },
+            { id: 11, type: 'theory',
+                q: 'ماذا يعني مصطلح "Stop Hunt" أو "Stop Raid"؟',
+                options: ['إيقاف التداول', 'حركة سعرية لتفعيل أوامر وقف الخسارة ثم الانعكاس', 'إغلاق الصفقة',
+                    'تجنب الخسارة'
+                ],
+                correct: 1, feedback: 'Stop Hunt هي حركة سعرية تتجاوز مستوى معروفاً لتفعيل الوقفات ثم تنعكس.' },
+            { id: 12, type: 'practical',
+                q: 'بعد الدخول في صفقة بيع بـ 3 عقود، ماذا تفعل عند تحقيق 10 نقاط ربح؟',
+                options: ['تغلق كل العقود', 'تغلق عقدين وتحرك الوقف لنقطة الدخول +1', 'تضيف عقوداً جديدة',
+                    'تنتظر دون فعل شيء'
+                ],
+                correct: 1, feedback: 'جني أرباح جزئي — إغلاق 2/3 العقود وتحريك الوقف يجعل الصفقة "مجانية".' },
+            { id: 13, type: 'theory',
+                q: 'ما هو الخط الأفقي الوحيد الذي يستخدمه ICT على الشارت؟',
+                options: ['خطوط فيبوناتشي', 'خطوط الترند', 'خطوط القمم والقيعان المتساوية (EQH/EQL)',
+                    'المتوسطات المتحركة'
+                ],
+                correct: 2, feedback: 'ICT يستخدم فقط الخطوط الأفقية على القمم والقيعان المتساوية.' },
+            { id: 14, type: 'practical',
+                q: 'إذا دخلت بيعاً عند 1.1891 والهدف 1.1864، كم نقطة ربح متوقعة؟',
+                options: ['10 نقاط', '27 نقطة', '50 نقطة', '5 نقاط'],
+                correct: 1, feedback: '1.1891 - 1.1864 = 27 نقطة — نطاق ربح كافٍ للسكالبينج.' },
+            { id: 15, type: 'theory',
+                q: 'ماذا يحدث بعد اكتمال عملية Stop Raid وفقاً لـ ICT؟',
+                options: ['يستمر الاتجاه', 'يرتفع السعر بقوة — دليل على أن الحركة كانت صيد سيولة', 'لا شيء',
+                    'يتوقف السوق'
+                ],
+                correct: 1, feedback: 'بعد Stop Raid، يرتفع السعر بقوة — هذا يؤكد أن الهبوط كان لجمع السيولة.' },
+            { id: 16, type: 'theory',
+                q: 'كم المدة التي يطلبها ICT لدراسة الشارت قبل التداول الفعلي؟',
+                options: ['أسبوع واحد', 'شهر كامل', '3 أشهر', 'سنة'],
+                correct: 1, feedback: 'شهر كامل من المراقبة والتسجيل بدون تداول فعلي.' },
+            { id: 17, type: 'practical',
+                q: 'هل يمكنك الربح حتى عندما تكون "مخطئاً" في تقدير الوجهة النهائية للسعر؟',
+                options: ['لا، هذا مستحيل', 'نعم، عبر جني أرباح جزئي على طول الطريق', 'فقط في الحساب التجريبي',
+                    'نعم، لكن بالصدفة فقط'
+                ],
+                correct: 1, feedback: 'جني الأرباح الجزئي يجعلك تربح حتى لو ضُرب وقف الخسارة في النهاية.' },
+            { id: 18, type: 'theory',
+                q: 'ما هي قاعدة ICT الذهبية بخصوص الحساب التجريبي؟',
+                options: ['استخدمه لمدة أسبوع فقط', 'إذا لم تنجح في Demo، لن تنجح في Live',
+                    'الحساب التجريبي غير مهم', 'انتقل للحقيقي بأسرع وقت'
+                ],
+                correct: 1, feedback: 'قاعدة لا استثناء فيها: النجاح في Demo شرط أساسي للنجاح في Live.' },
+            { id: 19, type: 'practical',
+                q: 'متى يكون بلوك الأوامر "صالحاً" للدخول؟',
+                options: ['دائماً', 'طالما لم يتجاوز السعر قمة شمعة الأوردر بلوك', 'لمدة ساعة فقط', 'في أي وقت'],
+                correct: 1, feedback: 'الإعداد يبقى صالحاً طالما لم يكسر السعر قمة شمعة الأوردر بلوك.' },
+            { id: 20, type: 'theory',
+                q: 'ما هو المطلوب ليكون بلوك الأوامر "ذا معنى" وفقاً لـ ICT؟',
+                options: ['أن يكون شمعة كبيرة فقط', 'سياق وقصة (Context/Storyline) خلفه', 'أن يظهر على الإطار اليومي',
+                    'أن يكون أحمر اللون'
+                ],
+                correct: 1, feedback: 'ليس كل شمعة = أوردر بلوك. يجب أن يكون هناك سياق وقصة تفسر الإعداد.' }
+        ];
 
-  // شمعة واحدة
-  document.getElementById('btStepBtn').addEventListener('click', () => {
-    if (!_btCandles_ref) return;
-    _btAddOne(); _btFitVisible();
-  });
+        // ══════════════════════════════════════════════════════════
+        //  حالة الاختبار
+        // ══════════════════════════════════════════════════════════
+        let userAnswers = new Array(20).fill(null);
+        let answeredCount = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let timerInterval = null;
+        let timeLeft = 20 * 60; // 20 دقيقة بالثواني
+        let timerBarWidth = 100;
 
-  // تسريع
-  document.getElementById('btFasterBtn').addEventListener('click', () => {
-    if (!_btCandles_ref) return;
-    const i = _btSpeedLvls.indexOf(_btSpeed);
-    if (i < _btSpeedLvls.length-1) {
-      const was=_btPlaying;
-      if(was){_btPlaying=false;clearTimeout(_btTimer);}
-      _btSpeed=_btSpeedLvls[i+1];
-      document.getElementById('btSpeedLbl').textContent='×'+_btSpeed;
-      if(was){_btPlaying=true;_btTick();}
-    }
-  });
+        // ══════════════════════════════════════════════════════════
+        //  بناء الاختبار
+        // ══════════════════════════════════════════════════════════
+        function buildNewQuiz() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
 
-  // إبطاء
-  document.getElementById('btSlowerBtn').addEventListener('click', () => {
-    if (!_btCandles_ref) return;
-    const i = _btSpeedLvls.indexOf(_btSpeed);
-    if (i > 0) {
-      const was=_btPlaying;
-      if(was){_btPlaying=false;clearTimeout(_btTimer);}
-      _btSpeed=_btSpeedLvls[i-1];
-      document.getElementById('btSpeedLbl').textContent='×'+_btSpeed;
-      if(was){_btPlaying=true;_btTick();}
-    }
-  });
+            questionsDB.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'q-card';
+                card.id = 'qCard' + q.id;
+                card.innerHTML = `
+                    <div class="q-number">
+                        <span>سؤال ${q.id} / 20</span>
+                        <span style="font-size:10px;padding:1px 7px;border-radius:3px;background:${q.type==='theory'?'rgba(0,212,255,0.1)':'rgba(255,107,53,0.1)'};color:${q.type==='theory'?'var(--accent)':'var(--accent2)'};border:1px solid ${q.type==='theory'?'rgba(0,212,255,0.18)':'rgba(255,107,53,0.18)'};">${q.type==='theory'?'نظري':'تطبيقي'}</span>
+                    </div>
+                    <div class="q-text">${q.q}</div>
+                    <div class="options" id="options${q.id}"></div>
+                    <div class="feedback" id="feedback${q.id}"></div>
+                `;
+                container.appendChild(card);
 
-  // إعادة تعيين
-  document.getElementById('btResetBtn').addEventListener('click', () => {
-    if (!_btCandles_ref) return;
-    _btPlaying=false; clearTimeout(_btTimer);
-    document.getElementById('btEndOverlay').classList.remove('show');
-    document.getElementById('btProgFill').style.width='0%';
-    _btIndex = Math.min(BT_VISIBLE, _btCandles_ref.length);
-    _btSeries.setData(_btCandles_ref.slice(0, _btIndex));
-    _btFitVisible(); _btUpdateUI(); _btUpdatePlayBtn();
-  });
+                const optsDiv = document.getElementById('options' + q.id);
+                const letters = ['أ', 'ب', 'ج', 'د'];
+                q.options.forEach((opt, oi) => {
+                    const optEl = document.createElement('div');
+                    optEl.className = 'option';
+                    optEl.innerHTML = `
+                        <div class="opt-letter">${letters[oi]}</div>
+                        <div class="opt-text">${opt}</div>
+                    `;
+                    optEl.addEventListener('click', () => selectAnswer(q.id, oi, q.correct, q.feedback,
+                        q.type));
+                    optsDiv.appendChild(optEl);
+                });
+            });
+        }
 
-  // نقر على شريط التقدم
-  document.getElementById('btProgTrack').addEventListener('click', (e) => {
-    if (!_btCandles_ref) return;
-    const r=e.currentTarget.getBoundingClientRect();
-    const ratio=(e.clientX-r.left)/r.width;
-    const target=Math.max(BT_VISIBLE, Math.floor(ratio*_btCandles_ref.length));
-    _btPlaying=false; clearTimeout(_btTimer);
-    document.getElementById('btEndOverlay').classList.remove('show');
-    _btIndex=Math.min(target,_btCandles_ref.length);
-    _btSeries.setData(_btCandles_ref.slice(0,_btIndex));
-    _btFitVisible(); _btUpdateUI(); _btUpdatePlayBtn();
-  });
+        function selectAnswer(qId, chosen, correctIdx, feedbackText, qType) {
+            const idx = qId - 1;
+            if (userAnswers[idx] !== null) return; // تمت الإجابة مسبقاً
 
-  // رفع CSV
-  document.getElementById('btCsvInput').addEventListener('change', async (e) => {
-    const file=e.target.files[0]; if(!file) return;
-    const st=document.getElementById('btCsvStatus');
-    st.className='bt-csv-status'; st.textContent='⏳ جاري التحليل...';
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      try {
-        const candles=_btParseCSV(ev.target.result);
-        st.className='bt-csv-status ok';
-        st.textContent=`✅ ${candles.length.toLocaleString()} شمعة محملة من ${file.name}`;
-        const tf=file.name.match(/[MHD]\d+/i);
-        if(tf) document.getElementById('btTfBadge').textContent=tf[0].toUpperCase();
-        _btInitChart(candles);
-      } catch(err) {
-        st.className='bt-csv-status err';
-        st.textContent='❌ '+err.message;
-      }
-    };
-    reader.readAsText(file,'UTF-8');
-  });
+            const isCorrect = chosen === correctIdx;
+            userAnswers[idx] = { chosen, isCorrect };
+            answeredCount++;
 
-  // تهيئة الشارت ببيانات تجريبية فور تحميل الصفحة
-  if (typeof LightweightCharts !== 'undefined') {
-    const sample = _btGenerateSampleData();
-    _btInitChart(sample);
-    document.getElementById('btCsvStatus').textContent = '⚠️ بيانات تجريبية — ارفع ملف CSV للبيانات الحقيقية';
-  } else {
-    document.getElementById('btChartEl').innerHTML =
-      '<div style="display:flex;align-items:center;justify-content:center;height:320px;color:#5a7a8a;font-size:13px;font-family:Cairo,sans-serif;">⚠️ لم تُحمَّل مكتبة LightweightCharts — تحقق من الاتصال</div>';
-  }
+            if (isCorrect) correctCount++;
+            else wrongCount++;
 
-});
+            // تحديث الواجهة
+            updateScoreUI();
 
-// ─── 7. حفظ الملاحظات محلياً ──────────────────────────────
-function btSaveNotes() {
-  const data = {
-    note1: document.getElementById('btNote1').value,
-    note2: document.getElementById('btNote2').value,
-    note3: document.getElementById('btNote3').value,
-    note4: document.getElementById('btNote4').value,
-    savedAt: new Date().toLocaleString('ar-DZ'),
-  };
-  try {
-    localStorage.setItem('bt_notes_lesson1', JSON.stringify(data));
-    const msg = document.getElementById('btSavedMsg');
-    msg.classList.add('show');
-    setTimeout(() => msg.classList.remove('show'), 2500);
-  } catch(e) {
-    alert('لم يتمكن المتصفح من الحفظ المحلي');
-  }
-}
+            const card = document.getElementById('qCard' + qId);
+            card.classList.add(isCorrect ? 'correct' : 'wrong');
 
-// استرجاع الملاحظات المحفوظة عند تحميل الصفحة
-(function() {
-  try {
-    const saved = localStorage.getItem('bt_notes_lesson1');
-    if (!saved) return;
-    const d = JSON.parse(saved);
-    if (d.note1) document.getElementById('btNote1').value = d.note1;
-    if (d.note2) document.getElementById('btNote2').value = d.note2;
-    if (d.note3) document.getElementById('btNote3').value = d.note3;
-    if (d.note4) document.getElementById('btNote4').value = d.note4;
-  } catch(e) {}
-})();
+            const options = document.getElementById('options' + qId).children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                if (i === correctIdx) options[i].classList.add('correct-ans');
+                if (i === chosen && !isCorrect) options[i].classList.add('wrong-ans');
+            }
 
+            const fb = document.getElementById('feedback' + qId);
+            fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+            fb.textContent = (isCorrect ? '✅ ' : '❌ ') + feedbackText;
 
-function showLesson(){
-  document.getElementById('page0').style.display='none';
-  document.getElementById('pagelesson').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function backFromLesson(){
-  document.getElementById('pagelesson').style.display='none';
-  document.getElementById('page0').style.display='';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-</script>
+            // تفعيل زر الانتقال للتحليل إذا اكتملت الإجابة
+            if (answeredCount >= 20) {
+                document.getElementById('nextToBBtn').disabled = false;
+                document.getElementById('nextToBBtn').textContent = '📊 التالي: التحليل + الجورنال ←';
+                clearInterval(timerInterval);
+            }
+
+            // تحديث شريط التقدم العائم
+            updateFloatingBar();
+        }
+
+        function updateScoreUI() {
+            document.getElementById('scoreVal').textContent = correctCount;
+            document.getElementById('correctVal').textContent = correctCount;
+            document.getElementById('wrongVal').textContent = wrongCount;
+            const pct = (answeredCount / 20) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').textContent = answeredCount + ' / 20';
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  المؤقت
+        // ══════════════════════════════════════════════════════════
+        function startTimer() {
+            timeLeft = 20 * 60;
+            timerBarWidth = 100;
+            updateTimerDisplay();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerBarWidth = (timeLeft / (20 * 60)) * 100;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timeoutOverlay').classList.add('show');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            const display = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+            document.getElementById('timerDisplay').textContent = display;
+            document.getElementById('timerBarFill').style.width = timerBarWidth + '%';
+            document.getElementById('fbTimer').textContent = display;
+
+            const timerEl = document.getElementById('timerDisplay');
+            timerEl.classList.remove('warning', 'danger');
+            if (timeLeft <= 120) timerEl.classList.add('danger');
+            else if (timeLeft <= 300) timerEl.classList.add('warning');
+        }
+
+        function updateFloatingBar() {
+            const pct = (answeredCount / 20) * 100;
+            document.getElementById('fbFill').style.width = pct + '%';
+            document.getElementById('fbProgressText').textContent = answeredCount + '/20';
+        }
+
+        function initFloatingTimer() {
+            document.getElementById('floatingBar').style.display = 'flex';
+            updateFloatingBar();
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  التنقل بين الصفحات
+        // ══════════════════════════════════════════════════════════
+        function startQuiz() {
+            document.getElementById('page0').style.display = 'none';
+            document.getElementById('page1').style.display = 'block';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('pagelesson').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            buildNewQuiz();
+            startTimer();
+            initFloatingTimer();
+            document.getElementById('nextToBBtn').disabled = true;
+            document.getElementById('nextToBBtn').textContent = '📊 التالي: التحليل + الجورنال ← (أجب على كل الأسئلة أولاً)';
+            switchTab('a');
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-a').classList.toggle('active', tab === 'a');
+            document.getElementById('tab-b').classList.toggle('active', tab === 'b');
+            document.getElementById('panel-a').classList.toggle('active', tab === 'a');
+            document.getElementById('panel-b').classList.toggle('active', tab === 'b');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (tab === 'b') {
+                document.getElementById('floatingBar').style.display = 'none';
+            } else {
+                document.getElementById('floatingBar').style.display = 'flex';
+                updateFloatingBar();
+            }
+        }
+
+        function goToResults() {
+            clearInterval(timerInterval);
+            document.getElementById('timeoutOverlay').classList.remove('show');
+            document.getElementById('floatingBar').style.display = 'none';
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'block';
+            document.getElementById('pagelesson').style.display = 'none';
+            buildResults();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartQuiz() {
+            userAnswers = new Array(20).fill(null);
+            answeredCount = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            updateScoreUI();
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressText').textContent = '0 / 20';
+            document.getElementById('nextToBBtn').disabled = true;
+            document.getElementById('nextToBBtn').textContent = '📊 التالي: التحليل + الجورنال ← (أجب على كل الأسئلة أولاً)';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('page1').style.display = 'block';
+            document.getElementById('pagelesson').style.display = 'none';
+            switchTab('a');
+            clearInterval(timerInterval);
+            buildNewQuiz();
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('floatingBar').style.display = 'flex';
+            updateFloatingBar();
+        }
+
+        function showLesson() {
+            document.getElementById('page0').style.display = 'none';
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('pagelesson').style.display = 'block';
+            document.getElementById('floatingBar').style.display = 'none';
+            clearInterval(timerInterval);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function backFromLesson() {
+            document.getElementById('pagelesson').style.display = 'none';
+            document.getElementById('page0').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function backToHome() {
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('page0').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  بناء صفحة النتائج
+        // ══════════════════════════════════════════════════════════
+        function buildResults() {
+            const total = questionsDB.length;
+            const score = correctCount;
+            const percentage = Math.round((score / total) * 100);
+            const passed = percentage >= 70;
+            const grade = percentage >= 90 ? 'A' : percentage >= 80 ? 'B' : percentage >= 70 ? 'C' : percentage >= 60 ?
+                'D' : 'F';
+            const gradeColor = passed ? 'var(--green)' : 'var(--red)';
+
+            document.getElementById('resultMainCard').innerHTML = `
+                <div class="result-grade" style="color:${gradeColor};">${grade}</div>
+                <div style="font-size:18px;font-weight:700;color:#fff;margin:8px 0;">${passed ? '🎉 أحسنت! لقد نجحت' : '📚 تحتاج مراجعة إضافية'}</div>
+                <div style="font-size:14px;color:var(--text-dim);">${passed ? 'أنت تفهم مفاهيم ICT الأساسية بشكل جيد' : 'راجع الدرس مرة أخرى ثم أعد الاختبار'}</div>
+                <div class="result-stats">
+                    <div class="stat-card">
+                        <div class="stat-val" style="color:${gradeColor};">${percentage}%</div>
+                        <div class="stat-lbl">النسبة المئوية</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" style="color:var(--green);">${correctCount}</div>
+                        <div class="stat-lbl">إجابات صحيحة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" style="color:var(--red);">${wrongCount}</div>
+                        <div class="stat-lbl">إجابات خاطئة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" style="color:var(--accent);">${total - answeredCount}</div>
+                        <div class="stat-lbl">لم يتم الرد</div>
+                    </div>
+                </div>
+            `;
+
+            // مراجعة الأسئلة
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '<h3 style="color:#fff;margin-bottom:16px;">📋 مراجعة الأسئلة</h3>';
+
+            questionsDB.forEach((q, idx) => {
+                const ua = userAnswers[idx];
+                const statusIcon = ua === null ? '⬜' : ua.isCorrect ? '✅' : '❌';
+                const statusText = ua === null ? 'لم يتم الرد' : ua.isCorrect ? 'صحيح' : 'خطأ';
+                const statusColor = ua === null ? 'var(--text-dim)' : ua.isCorrect ? 'var(--green)' :
+                    'var(--red)';
+
+                const reviewCard = document.createElement('div');
+                reviewCard.className = 'card';
+                reviewCard.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                        <span style="font-size:20px;">${statusIcon}</span>
+                        <span style="font-weight:700;color:#fff;">سؤال ${q.id}</span>
+                        <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:${q.type==='theory'?'rgba(0,212,255,0.1)':'rgba(255,107,53,0.1)'};color:${q.type==='theory'?'var(--accent)':'var(--accent2)'};">${q.type==='theory'?'نظري':'تطبيقي'}</span>
+                        <span style="color:${statusColor};font-size:12px;font-weight:700;">${statusText}</span>
+                    </div>
+                    <div style="font-size:14px;color:var(--text);margin-bottom:8px;">${q.q}</div>
+                    <div style="font-size:12px;color:var(--accent);">الإجابة الصحيحة: ${q.options[q.correct]}</div>
+                    <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">${q.feedback}</div>
+                `;
+                reviewContainer.appendChild(reviewCard);
+            });
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  التهيئة الأولية
+        // ══════════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', function() {
+            // إظهار الصفحة الرئيسية فقط
+            document.getElementById('page0').style.display = 'block';
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('pagelesson').style.display = 'none';
+        });
+    </script>
 </body>
 </html>
