@@ -2,199 +2,209 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>واجهة تداول وباك تيست متطورة</title>
+  <title>TradingView Clone - ICT Setup</title>
   <script src="https://cdn.jsdelivr.net/npm/klinecharts/dist/klinecharts.min.js"></script>
   <style>
+    /* ألوان TradingView الأصلية - النمط الداكن */
     :root {
-      --bg: #050a0f;
-      --surface: #0a1520;
-      --surface2: #0f1e2e;
-      --border: #1a3a5c;
-      --accent: #00d4ff;
-      --text: #c8dde8;
-      --red: #ff4466;
-      --green: #00ff88;
+      --tv-bg: #131722;
+      --tv-panel: #1e222d;
+      --tv-border: #2a2e39;
+      --tv-text: #d1d4dc;
+      --tv-text-hover: #ffffff;
+      --tv-active: #2962ff;
+      --tv-up: #089981;
+      --tv-down: #f23645;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    header {
-      background: var(--surface);
-      padding: 10px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 60px;
-    }
-    .controls {
-      display: flex;
-      gap: 10px;
-    }
-    .btn {
-      padding: 6px 12px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .btn-accent {
-      background: var(--accent);
-      color: #000;
-      border: none;
-    }
-    .main-layout {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 60px);
-    }
-    .toolbar {
-      width: 55px;
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 0;
-      gap: 10px;
-    }
-    .tool-btn {
-      width: 40px;
-      height: 40px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .tool-btn:hover, .tool-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-    }
-    #chart_container {
-      flex: 1;
-      height: 100%;
-      background: var(--bg);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, sans-serif; }
+    body { background: var(--tv-bg); color: var(--tv-text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    
+    /* الشريط العلوي (Top Toolbar) */
+    .top-bar { height: 40px; border-bottom: 1px solid var(--tv-border); display: flex; align-items: center; padding: 0 10px; gap: 15px; }
+    .symbol-name { font-weight: bold; font-size: 16px; letter-spacing: 1px; cursor: pointer; }
+    .timeframes { display: flex; gap: 5px; border-right: 1px solid var(--tv-border); padding-right: 15px; }
+    .tf-btn { background: none; border: none; color: var(--tv-text); cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+    .tf-btn:hover { background: var(--tv-border); color: var(--tv-text-hover); }
+    .tf-btn.active { color: var(--tv-active); }
+    .top-icons { display: flex; gap: 10px; margin-right: auto; }
+    .icon-btn { background: none; border: none; color: var(--tv-text); cursor: pointer; padding: 5px; }
+    .icon-btn:hover { color: var(--tv-text-hover); }
+
+    /* الهيكل الرئيسي (شريط الأدوات الأيسر + الشارت) */
+    .main-area { display: flex; flex: 1; height: calc(100vh - 40px); }
+    
+    /* شريط الأدوات الأيسر (Left Toolbar) */
+    .left-toolbar { width: 52px; border-left: 1px solid var(--tv-border); display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 12px; }
+    .draw-btn { width: 32px; height: 32px; background: none; border: none; color: var(--tv-text); cursor: pointer; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-size: 14px; }
+    .draw-btn:hover { background: var(--tv-border); color: var(--tv-text-hover); }
+    .draw-btn.active { background: rgba(41, 98, 255, 0.2); fill: var(--tv-active); color: var(--tv-active); }
+
+    /* حاوية الشارت */
+    .chart-wrapper { flex: 1; position: relative; }
+    #tv_chart { width: 100%; height: 100%; }
+
+    /* نافذة الإعدادات (Settings Modal) - مطابقة لتريدنج فيو */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; }
+    .modal { background: var(--tv-panel); width: 450px; border-radius: 6px; border: 1px solid var(--tv-border); box-shadow: 0 4px 20px rgba(0,0,0,0.4); display: flex; flex-direction: column; }
+    .modal-header { padding: 15px; border-bottom: 1px solid var(--tv-border); display: flex; justify-content: space-between; font-weight: bold; }
+    .close-modal { cursor: pointer; color: var(--tv-text-hover); }
+    .modal-tabs { display: flex; border-bottom: 1px solid var(--tv-border); }
+    .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; border-bottom: 2px solid transparent; }
+    .tab.active { border-bottom-color: var(--tv-active); color: var(--tv-active); }
+    .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; }
+    .setting-row input[type="color"] { background: none; border: 1px solid var(--tv-border); cursor: pointer; border-radius: 4px; width: 30px; height: 30px; padding: 0; }
+    .modal-footer { padding: 15px; border-top: 1px solid var(--tv-border); display: flex; justify-content: flex-end; gap: 10px; }
+    .btn { padding: 6px 16px; border-radius: 4px; cursor: pointer; border: none; font-weight: bold; }
+    .btn-cancel { background: transparent; color: var(--tv-text); border: 1px solid var(--tv-border); }
+    .btn-ok { background: var(--tv-active); color: #fff; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h2>منصة المحاكاة وأدوات الرسم الاحترافية</h2>
-    <div class="controls">
-      <button class="btn btn-accent" onclick="nextBar()">الشمعة التالية ➡️</button>
-      <button class="btn" onclick="resetBacktest()">إعادة ضبط 🔄</button>
+  <div class="top-bar">
+    <div class="symbol-name">XAUUSD</div>
+    <div class="timeframes">
+      <button class="tf-btn">1m</button>
+      <button class="tf-btn active">15m</button>
+      <button class="tf-btn">1h</button>
+      <button class="tf-btn">4h</button>
     </div>
-  </header>
+    <div class="top-icons">
+      <button class="icon-btn" onclick="openSettings()">⚙️ إعدادات الشارت</button>
+    </div>
+  </div>
 
-  <div class="main-layout">
-    <div class="toolbar">
-      <button class="tool-btn" onclick="setActiveTool(this, 'trendLine')" title="خط اتجاه">📈</button>
-      <button class="tool-btn" onclick="setActiveTool(this, 'horizontalLine')" title="خط أفقي">➖</button>
-      <button class="tool-btn" onclick="setActiveTool(this, 'rect')" title="مستطيل (Order Block / FVG)">🟩</button>
-      <button class="tool-btn" onclick="setActiveTool(this, 'fibonacciRetracement')" title="مستويات الفيبوناتشي">🎯</button>
-      <button class="tool-btn" onclick="clearAllShapes()" title="مسح الرسومات" style="color: var(--red);">❌</button>
+  <div class="main-area">
+    <div class="left-toolbar">
+      <button class="draw-btn active" onclick="setTool(this, 'pointer')" title="مؤشر">➕</button>
+      <button class="draw-btn" onclick="setTool(this, 'trendLine')" title="خط اتجاه">📈</button>
+      <button class="draw-btn" onclick="setTool(this, 'horizontalLine')" title="خط أفقي">➖</button>
+      <button class="draw-btn" onclick="setTool(this, 'rayLine')" title="شعاع">↗️</button>
+      <button class="draw-btn" onclick="setTool(this, 'fibonacciRetracement')" title="تصحيح فيبوناتشي">🎯</button>
+      <button class="draw-btn" onclick="setTool(this, 'rect')" title="مستطيل">🟩</button>
+      <hr style="width: 30px; border-color: var(--tv-border);">
+      <button class="draw-btn" onclick="chart.removeOverlay()" title="إزالة الرسومات" style="color: var(--tv-down);">🗑️</button>
     </div>
 
-    <div id="chart_container"></div>
+    <div class="chart-wrapper">
+      <div id="tv_chart"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>إعدادات الشارت</span>
+        <span class="close-modal" onclick="closeSettings()">✕</span>
+      </div>
+      <div class="modal-tabs">
+        <div class="tab active">الرمز (Symbol)</div>
+        <div class="tab">المظهر (Appearance)</div>
+      </div>
+      <div class="modal-body">
+        <div class="setting-row">
+          <span>الشموع الصاعدة (Up color)</span>
+          <input type="color" id="upColor" value="#089981">
+        </div>
+        <div class="setting-row">
+          <span>الشموع الهابطة (Down color)</span>
+          <input type="color" id="downColor" value="#f23645">
+        </div>
+        <div class="setting-row">
+          <span>خلفية الشارت (Background)</span>
+          <input type="color" id="bgColor" value="#131722">
+        </div>
+        <div class="setting-row">
+          <span>الشبكة (Grid lines)</span>
+          <input type="color" id="gridColor" value="#1e222d">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" onclick="closeSettings()">إلغاء</button>
+        <button class="btn btn-ok" onclick="applySettings()">موافق</button>
+      </div>
+    </div>
   </div>
 
   <script>
     let chart;
-    let fullDataset = [];
-    let visibleDataCount = 35; 
-    let currentIndex = 0;
 
-    // توليد بيانات هيكلية دقيقة تحاكي حركة الذهب
-    function generateTechnicalData() {
+    function generateData() {
       const data = [];
       let price = 2320.0;
-      let time = Date.now() - 200 * 15 * 60 * 1000;
-      
+      let time = Date.now() - 100 * 15 * 60 * 1000;
       for (let i = 0; i < 150; i++) {
-        const change = (Math.random() - 0.48) * 8;
+        const change = (Math.random() - 0.5) * 10;
         const open = price;
         const close = price + change;
-        const high = Math.max(open, close) + Math.random() * 3;
-        const low = Math.min(open, close) - Math.random() * 3;
-        
-        data.push({ timestamp: time, open, high, low, close, volume: Math.random() * 500 });
+        const high = Math.max(open, close) + Math.random() * 5;
+        const low = Math.min(open, close) - Math.random() * 5;
+        data.push({ timestamp: time, open, high, low, close, volume: Math.random() * 100 });
         price = close;
         time += 15 * 60 * 1000;
       }
       return data;
     }
 
-    // تهيئة الشارت وتخصيصه بالكامل بالثيم المظلم
     function initChart() {
-      chart = klinecharts.init('chart_container');
-      
+      chart = klinecharts.init('tv_chart');
+      applyChartStyles('#131722', '#089981', '#f23645', '#1e222d');
+      chart.applyNewData(generateData());
+    }
+
+    // دالة تطبيق الإعدادات المرئية على المحرك
+    function applyChartStyles(bg, up, down, grid) {
       chart.setStyles({
-        grid: { show: true, horizontal: { color: '#142535' }, vertical: { color: '#142535' } },
+        grid: { horizontal: { color: grid }, vertical: { color: grid } },
         candle: {
-          type: 'candle_solid',
-          bar: { upColor: '#00ff88', downColor: '#ff4466' },
-          priceMark: { last: { show: true, color: '#00d4ff' } }
-        }
+          bar: { upColor: up, downColor: down, noChangeColor: up },
+          line: { upColor: up, downColor: down, noChangeColor: up }
+        },
+        yAxis: { axisLine: { color: grid }, tickLine: { color: grid } },
+        xAxis: { axisLine: { color: grid }, tickLine: { color: grid } }
       });
-
-      fullDataset = generateTechnicalData();
-      resetBacktest();
+      document.body.style.backgroundColor = bg;
+      document.querySelector('.top-bar').style.backgroundColor = bg;
+      document.querySelector('.left-toolbar').style.backgroundColor = bg;
     }
 
-    // إعادة تعيين الباك تيست لعرض الشموع الأولى فقط وإخفاء المستقبل
-    function resetBacktest() {
-      currentIndex = visibleDataCount;
-      const initialData = fullDataset.slice(0, currentIndex);
-      chart.applyNewData(initialData);
-    }
-
-    // حقن الشمعة التالية (محاكاة Bar Replay لـ TradingView)
-    function nextBar() {
-      if (currentIndex >= fullDataset.length) {
-        alert("انتهت البيانات التاريخية المتاحة.");
+    // التحكم في أدوات الرسم
+    function setTool(btn, tool) {
+      document.querySelectorAll('.draw-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      if (tool === 'pointer') {
+        chart.overrideOverlay({ lock: true });
         return;
       }
-      const bar = fullDataset[currentIndex];
-      chart.updateData(bar);
-      currentIndex++;
-    }
-
-    // تفعيل أداة الرسم المحددة والتقاط إحداثيات الماوس على الكانفاس
-    function setActiveTool(button, toolName) {
-      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-      button.classList.add('active');
-
+      
       chart.createOverlay({
-        name: toolName,
+        name: tool,
         lock: false,
         styles: {
-          line: { color: '#00d4ff', size: 2 },
-          polygon: { color: 'rgba(0, 212, 255, 0.12)' }
+          line: { color: '#2962ff', size: 2 },
+          polygon: { color: 'rgba(41, 98, 255, 0.2)' }
         }
       });
     }
 
-    // مسح كافة الرسومات من فوق الشارت
-    function clearAllShapes() {
-      chart.removeOverlay();
-      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    // نظام نافذة الإعدادات
+    function openSettings() {
+      document.getElementById('settingsModal').style.display = 'flex';
+    }
+    
+    function closeSettings() {
+      document.getElementById('settingsModal').style.display = 'none';
+    }
+    
+    function applySettings() {
+      const up = document.getElementById('upColor').value;
+      const down = document.getElementById('downColor').value;
+      const bg = document.getElementById('bgColor').value;
+      const grid = document.getElementById('gridColor').value;
+      applyChartStyles(bg, up, down, grid);
+      closeSettings();
     }
 
     window.onload = initChart;
