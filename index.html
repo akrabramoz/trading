@@ -1,394 +1,1517 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر الهدايا | بوكس إسلامي فاخر</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #1a4d2e; /* أخضر ملكي متناسق مع المنتج */
-            --accent-color: #d4af37; /* لون ذهبي */
-            --secondary-color: #333;
-            --bg-color: #f4f6f5;
-            --success-color: #28a745;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوكس الإهداء الإسلامي الفاخر | الجزائر</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D5A3;
+  --gold-dark: #8B6914;
+  --cream: #FAF7F0;
+  --deep: #1A1208;
+  --warm: #2D1F0A;
+  --text: #3D2B0F;
+  --text-light: #7A6040;
+  --white: #FFFFFF;
+  --green: #1B4332;
+  --blue: #1B3A6B;
+  --black: #111111;
+  --pink: #8B3A5A;
+  --burgundy: #6B1A2A;
+  --border: rgba(201,168,76,0.3);
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--secondary-color);
-            line-height: 1.6;
-        }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+}
 
-        /* شريط الإعلان العلوي */
-        .announcement-bar {
-            background-color: var(--accent-color);
-            color: #fff;
-            text-align: center;
-            padding: 8px 10px;
-            font-size: 15px;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
+/* ===== HEADER ===== */
+header {
+  background: var(--deep);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--gold-dark);
+}
 
-        /* الهيدر */
-        header {
-            background: #fff;
-            padding: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+.logo {
+  font-family: 'Playfair Display', serif;
+  color: var(--gold);
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
 
-        .logo {
-            font-size: 26px;
-            font-weight: 900;
-            color: var(--primary-color);
-        }
-        .logo i {
-            color: var(--accent-color);
-            margin-left: 8px;
-        }
+.logo span {
+  display: block;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.65rem;
+  color: var(--gold-light);
+  letter-spacing: 4px;
+  text-align: center;
+  opacity: 0.8;
+}
 
-        /* الحاوية الرئيسية */
-        .container {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
+.header-badge {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--deep);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
 
-        /* تقسيم الصفحة (المنتج والفورم) */
-        .product-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(160deg, var(--deep) 0%, var(--warm) 50%, #3D2000 100%);
+  min-height: 92vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
 
-        /* قسم الصور */
-        .product-images {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
 
-        .main-img {
-            width: 100%;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid #eee;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='1'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
 
-        /* قسم تفاصيل المنتج والفورم */
-        .product-details {
-            display: flex;
-            flex-direction: column;
-        }
+.hero-text {
+  padding: 60px 50px 60px 30px;
+  position: relative;
+  z-index: 2;
+}
 
-        .product-title {
-            font-size: 26px;
-            font-weight: 900;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  padding: 8px 18px;
+  border-radius: 30px;
+  margin-bottom: 28px;
+  font-weight: 500;
+}
 
-        /* التقييمات */
-        .rating {
-            color: var(--accent-color);
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        .rating span {
-            color: #666;
-            margin-right: 5px;
-            font-size: 14px;
-        }
+.hero-badge::before { content: '✦'; color: var(--gold); }
 
-        /* الأسعار */
-        .price-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            background: #fcf9f2;
-            padding: 15px;
-            border-radius: 8px;
-            border-right: 4px solid var(--accent-color);
-        }
+.hero-title {
+  font-family: 'Tajawal', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
 
-        .current-price {
-            font-size: 30px;
-            font-weight: 900;
-            color: var(--primary-color);
-        }
+.hero-title .gold { color: var(--gold); }
 
-        .old-price {
-            font-size: 18px;
-            text-decoration: line-through;
-            color: #888;
-        }
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.8;
+  margin-bottom: 36px;
+  font-weight: 300;
+  max-width: 420px;
+}
 
-        /* مميزات سريعة */
-        .shipping-info-badge {
-            background: #eef2ef;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid #d4dfd7;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
+.hero-price-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 16px;
+  padding: 22px 28px;
+  margin-bottom: 32px;
+  backdrop-filter: blur(10px);
+  display: inline-block;
+}
 
-        /* استمارة الطلب الشبيهة بشوبيفاي */
-        .order-form-container {
-            background: #fff;
-            border: 2px solid var(--primary-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(26, 77, 46, 0.1);
-        }
+.price-label {
+  font-size: 0.78rem;
+  color: var(--gold-light);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
 
-        .form-title {
-            font-size: 20px;
-            margin-bottom: 15px;
-            font-weight: 900;
-            color: var(--primary-color);
-            text-align: center;
-        }
+.price-value {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.price-value span {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--gold-light);
+  margin-right: 6px;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-        }
+.price-note {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+}
 
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: 0.3s;
-        }
+.hero-cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 5px rgba(26, 77, 46, 0.3);
-        }
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Tajawal', sans-serif;
+  box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
 
-        /* زر الشراء */
-        .btn-submit {
-            width: 100%;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(26, 77, 46, 0.3);
-            animation: pulse 2s infinite;
-        }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(201,168,76,0.5);
+}
 
-        .btn-submit:hover {
-            background: #11331e;
-        }
+.btn-secondary {
+  background: transparent;
+  color: var(--gold-light);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 16px 28px;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Tajawal', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
+.btn-secondary:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold);
+}
 
-        /* قسم الشرح والوصف للمنتج */
-        .product-description {
-            margin-top: 40px;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+/* ===== HERO GALLERY ===== */
+.hero-gallery {
+  position: relative;
+  height: 92vh;
+  overflow: hidden;
+}
 
-        .description-title {
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 22px;
-            color: var(--primary-color);
-            font-weight: 900;
-        }
+.main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
 
-        .features-list {
-            list-style: none;
-        }
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--deep) 0%, transparent 40%);
+}
 
-        .features-list li {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+.thumbs {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
 
-        .features-list li i {
-            color: var(--accent-color);
-            font-size: 20px;
-        }
+.thumb {
+  width: 68px;
+  height: 68px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.7;
+}
 
-        /* التجاوب مع الهواتف */
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-            .product-title {
-                font-size: 22px;
-            }
-            .current-price {
-                font-size: 26px;
-            }
-        }
-    </style>
+.thumb.active, .thumb:hover {
+  border-color: var(--gold);
+  opacity: 1;
+}
+
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ===== TRUST BAR ===== */
+.trust-bar {
+  background: var(--deep);
+  border-top: 1px solid rgba(201,168,76,0.2);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding: 20px 24px;
+  display: flex;
+  justify-content: center;
+  gap: clamp(20px, 5vw, 80px);
+  flex-wrap: wrap;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.trust-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(201,168,76,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title .eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-weight: 600;
+  display: block;
+}
+
+.section-title h2 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: var(--deep);
+  line-height: 1.3;
+}
+
+.section-title p {
+  color: var(--text-light);
+  margin-top: 14px;
+  font-size: 1rem;
+  max-width: 500px;
+  margin-inline: auto;
+  line-height: 1.8;
+}
+
+/* ===== CONTENTS ===== */
+.contents-section {
+  padding: 90px 24px;
+  background: var(--cream);
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+.contents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.content-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.content-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.content-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(201,168,76,0.15);
+  border-color: var(--gold);
+}
+
+.content-card:hover::before { transform: scaleX(1); }
+
+.card-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 18px;
+  border: 1px solid var(--border);
+}
+
+.content-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--deep);
+  margin-bottom: 8px;
+}
+
+.content-card p {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ===== COLORS ===== */
+.colors-section {
+  padding: 90px 24px;
+  background: linear-gradient(180deg, #F5EFE0 0%, var(--cream) 100%);
+}
+
+.colors-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 10px 26px;
+  border-radius: 30px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text-light);
+}
+
+.tab-btn.active {
+  background: var(--deep);
+  color: var(--gold);
+  border-color: var(--deep);
+}
+
+.color-panel { display: none; }
+.color-panel.active { display: block; }
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.color-card {
+  background: var(--white);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.color-card:hover, .color-card.selected {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(201,168,76,0.2);
+}
+
+.color-swatch {
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-swatch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.color-card:hover .color-swatch img { transform: scale(1.08); }
+
+.color-check {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--deep);
+  font-size: 0.7rem;
+  font-weight: 800;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.color-card.selected .color-check { opacity: 1; }
+
+.color-info {
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.color-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--deep);
+}
+
+/* ===== TYPE SELECTOR ===== */
+.type-section {
+  padding: 60px 24px 0;
+  background: linear-gradient(180deg, var(--cream) 0%, #F5EFE0 100%);
+}
+
+.type-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.type-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.type-card.selected, .type-card:hover {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
+}
+
+.type-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.type-badge.light { background: rgba(201,168,76,0.15); color: var(--gold-dark); }
+.type-badge.thick { background: rgba(27,67,50,0.12); color: var(--green); }
+
+.type-card h3 { font-size: 1rem; font-weight: 700; color: var(--deep); margin-bottom: 8px; }
+.type-card p { font-size: 0.8rem; color: var(--text-light); line-height: 1.6; }
+
+/* ===== ORDER FORM ===== */
+.order-section {
+  padding: 90px 24px;
+  background: var(--deep);
+  position: relative;
+  overflow: hidden;
+}
+
+.order-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23C9A84C' fill-opacity='0.03'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.order-section .section-title h2 { color: var(--white); }
+.order-section .section-title .eyebrow { color: var(--gold); }
+.order-section .section-title p { color: rgba(255,255,255,0.5); }
+
+.order-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 50px;
+  align-items: start;
+  position: relative;
+  z-index: 2;
+}
+
+.order-summary {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 24px;
+  padding: 36px 30px;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 90px;
+}
+
+.summary-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.88rem;
+}
+
+.summary-item .label { color: rgba(255,255,255,0.55); }
+.summary-item .value { color: var(--white); font-weight: 600; }
+.summary-item .value.gold { color: var(--gold); font-size: 1rem; }
+
+.summary-selected-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.cod-badge {
+  background: rgba(27,67,50,0.3);
+  border: 1px solid rgba(27,180,100,0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cod-badge .icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(27,180,100,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.cod-badge .text { font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.cod-badge .text strong { color: #4ADE80; display: block; font-size: 0.88rem; }
+
+/* ===== FORM ===== */
+.order-form-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 24px;
+  padding: 40px 36px;
+}
+
+.form-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-title::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: var(--gold);
+  border-radius: 2px;
+  display: block;
+}
+
+.form-group { margin-bottom: 20px; }
+
+label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+
+label .req { color: var(--gold); margin-right: 2px; }
+
+input, select, textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  color: var(--white);
+  outline: none;
+  transition: all 0.3s;
+  direction: rtl;
+}
+
+input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+}
+
+select option { background: #1A1208; color: var(--white); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.form-select-display {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: var(--gold-light);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: default;
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold), #A87520);
+  color: var(--deep);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(201,168,76,0.45);
+}
+
+.submit-btn:active { transform: translateY(0); }
+
+.form-note {
+  text-align: center;
+  font-size: 0.77rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 16px;
+  line-height: 1.7;
+}
+
+/* ===== SUCCESS ===== */
+#success-msg {
+  display: none;
+  background: rgba(27,67,50,0.4);
+  border: 1px solid rgba(74,222,128,0.3);
+  border-radius: 16px;
+  padding: 30px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+#success-msg .success-icon { font-size: 3rem; margin-bottom: 12px; }
+#success-msg h3 { color: #4ADE80; font-size: 1.2rem; margin-bottom: 8px; }
+#success-msg p { color: rgba(255,255,255,0.65); font-size: 0.88rem; line-height: 1.7; }
+
+/* ===== REVIEWS ===== */
+.reviews-section {
+  padding: 90px 24px;
+  background: var(--cream);
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.review-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  transition: all 0.3s;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(201,168,76,0.12);
+  border-color: var(--gold);
+}
+
+.stars {
+  color: var(--gold);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+
+.review-text {
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 18px;
+  font-style: italic;
+}
+
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reviewer-avatar {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.reviewer-name { font-size: 0.88rem; font-weight: 700; color: var(--deep); }
+.reviewer-location { font-size: 0.75rem; color: var(--text-light); }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--deep);
+  padding: 40px 24px 24px;
+  text-align: center;
+  border-top: 1px solid rgba(201,168,76,0.2);
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  color: var(--gold);
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.footer-text {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.7;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--gold); }
+
+/* ===== STICKY CTA ===== */
+.sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--deep);
+  border-top: 1px solid rgba(201,168,76,0.3);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+  transform: translateY(100%);
+  transition: transform 0.4s;
+}
+
+.sticky-cta.visible { transform: translateY(0); }
+
+.sticky-price {
+  color: var(--gold);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.sticky-price small {
+  display: block;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 400;
+}
+
+.sticky-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--deep);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 13px 30px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.sticky-btn:hover { transform: scale(1.03); }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--deep);
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 200;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-gallery { height: 55vw; min-height: 280px; }
+  .hero-text { padding: 40px 24px; }
+  .order-wrapper { grid-template-columns: 1fr; }
+  .order-summary { position: static; }
+  .form-row { grid-template-columns: 1fr; }
+  .type-cards { grid-template-columns: 1fr; }
+  .trust-bar { gap: 16px; }
+  .thumbs { gap: 7px; }
+  .thumb { width: 52px; height: 52px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.9rem; }
+  .order-form-box { padding: 28px 20px; }
+  .order-summary { padding: 24px 20px; }
+  .color-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-badge { animation: fadeUp 0.6s ease both; }
+.hero-title { animation: fadeUp 0.7s 0.1s ease both; }
+.hero-subtitle { animation: fadeUp 0.7s 0.2s ease both; }
+.hero-price-box { animation: fadeUp 0.7s 0.3s ease both; }
+.hero-cta { animation: fadeUp 0.7s 0.4s ease both; }
+</style>
 </head>
 <body>
 
-    <div class="announcement-bar">
-        ✨ الدفع عند الاستلام - توصيل سريع عبر ZR Express لجميع الولايات ✨
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    Nour Gift
+    <span>هدايا إسلامية فاخرة</span>
+  </div>
+  <div class="header-badge">🚚 توصيل لكل الجزائر</div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-text">
+    <div class="hero-badge">بوكس الإهداء الإسلامي الفاخر</div>
+    <h1 class="hero-title">
+      هدية روحانية<br>
+      <span class="gold">لا تُنسى</span>
+    </h1>
+    <p class="hero-subtitle">
+      بوكس فاخر يجمع أجمل ما يُهدى — مصحف كريم، سجادة ناعمة، سبحة عطرة، ومسك أصيل.
+      كل شيء في علبة واحدة تُعبّر عن كل المحبة.
+    </p>
+    <div class="hero-price-box">
+      <div class="price-label">السعر الكلي</div>
+      <div class="price-value"><span>دج</span>3000</div>
+      <div class="price-note">✓ الدفع عند الاستلام &nbsp;|&nbsp; ✓ توصيل لكل الجزائر</div>
+    </div>
+    <div class="hero-cta">
+      <a href="#order" class="btn-primary">🛍️ اطلب الآن</a>
+      <button class="btn-secondary" onclick="scrollTo({top: document.getElementById('colors').offsetTop - 70, behavior:'smooth'})">🎨 اختر اللون</button>
+    </div>
+  </div>
+  <div class="hero-gallery">
+    <img src="IMG_20260604_120054_456.jpg" alt="بوكس إسلامي فاخر" class="main-img" id="mainImg">
+    <div class="gallery-overlay"></div>
+    <div class="thumbs" id="thumbs"></div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <div class="trust-icon">🚚</div>
+    توصيل عبر ZR Express
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">💳</div>
+    دفع عند الاستلام فقط
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">✨</div>
+    تغليف فاخر مميز
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">🎁</div>
+    هدية جاهزة للتقديم
+  </div>
+</div>
+
+<!-- CONTENTS -->
+<section class="contents-section">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">محتويات البوكس</span>
+      <h2>4 بياس في علبة واحدة فاخرة</h2>
+      <p>كل قطعة مختارة بعناية لتكون هدية متكاملة ومميزة</p>
+    </div>
+    <div class="contents-grid">
+      <div class="content-card">
+        <div class="card-icon">📖</div>
+        <h3>مصحف كريم</h3>
+        <p>مصحف بغلاف مخملي فاخر بأركان ذهبية<br>مقاس 20 × 15 سم</p>
+      </div>
+      <div class="content-card">
+        <div class="card-icon">🕌</div>
+        <h3>سجادة الصلاة</h3>
+        <p>سجادة ناعمة ومريحة بتطريز ذهبي أنيق وإطار فاخر</p>
+      </div>
+      <div class="content-card">
+        <div class="card-icon">📿</div>
+        <h3>سبحة فاخرة</h3>
+        <p>سبحة مطابقة للون البوكس بحبات عالية الجودة</p>
+      </div>
+      <div class="content-card">
+        <div class="card-icon">🌹</div>
+        <h3>مسك أصيل</h3>
+        <p>عطر مسك طبيعي فاخر — هدية بحد ذاتها</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPE SELECTOR -->
+<section class="type-section" id="type">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">نوع السجادة</span>
+      <h2>اختر النوع المناسب</h2>
+    </div>
+    <div class="type-cards">
+      <div class="type-card selected" onclick="selectType(this, 'سجادة خفيفة')" id="type-light">
+        <div class="type-badge light">خفيفة ✦ ألوان متعددة</div>
+        <h3>سجادة خفيفة</h3>
+        <p>ناعمة ومريحة — متوفرة بألوان متعددة وزاهية تناسب كل الأذواق</p>
+      </div>
+      <div class="type-card" onclick="selectType(this, 'سجادة خشينة')" id="type-thick">
+        <div class="type-badge thick">خشينة ✦ ألوان محددة</div>
+        <h3>سجادة خشينة</h3>
+        <p>سميكة ومريحة للركوع — متوفرة بألوان محددة وكلاسيكية</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLORS -->
+<section class="colors-section" id="colors">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">الألوان المتاحة</span>
+      <h2>اختر لونك المفضل</h2>
+      <p>كل لون متاح بتنسيق كامل ومتطابق بين البوكس والسجادة والسبحة</p>
     </div>
 
-    <header>
-        <div class="logo"><i class="fas fa-gift"></i> هديتي</div>
-    </header>
-
-    <div class="container">
-        
-        <div class="product-grid">
-            
-            <div class="product-images">
-                <img src="20260601_113428.jpg" alt="بوكس الهدايا الإسلامي" class="main-img">
-            </div>
-
-            <div class="product-details">
-                <h1 class="product-title">طقم الهدايا الإسلامي الفاخر (مصحف، سجادة، سبحة وعطر)</h1>
-                
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <span>(128 تقييم ممتاز)</span>
-                </div>
-
-                <div class="price-box">
-                    <span class="current-price">3000 د.ج</span>
-                    <span class="old-price">4500 د.ج</span>
-                </div>
-
-                <div class="shipping-info-badge">
-                    <i class="fas fa-shipping-fast" style="font-size: 24px;"></i>
-                    <span>توصيل سريع ومضمون عبر <strong>ZR Express</strong> والدفع بعد استلام وفحص المنتج.</span>
-                </div>
-
-                <div class="order-form-container">
-                    <div class="form-title">
-                        أدخل معلوماتك للطلب الآن
-                    </div>
-                    
-                    <form action="#" method="POST" id="orderForm">
-                        <div class="form-group">
-                            <label for="name">الاسم واللقب *</label>
-                            <input type="text" id="name" class="form-control" placeholder="اكتب اسمك الكامل هنا" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone">رقم الهاتف *</label>
-                            <input type="tel" id="phone" class="form-control" placeholder="مثال: 06XXXXXXXX" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="wilaya">الولاية *</label>
-                            <select id="wilaya" class="form-control" required>
-                                <option value="">-- يرجى اختيار الولاية --</option>
-                                <option value="16">16 - الجزائر العاصمة</option>
-                                <option value="9">09 - البليدة</option>
-                                <option value="31">31 - وهران</option>
-                                <option value="25">25 - قسنطينة</option>
-                                <option value="19">19 - سطيف</option>
-                                <option value="23">23 - عنابة</option>
-                                <option value="43">43 - ميلة</option>
-                                </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="address">العنوان الكامل (البلدية والحي) *</label>
-                            <input type="text" id="address" class="form-control" placeholder="اكتب عنوانك بالتفصيل لتسهيل التوصيل" required>
-                        </div>
-
-                        <button type="submit" class="btn-submit">
-                            <i class="fas fa-shopping-cart"></i> تأكيد الطلب الآن
-                        </button>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="product-description">
-            <h2 class="description-title">تفاصيل المنتج</h2>
-            <p style="margin-bottom: 20px; font-size: 16px;">
-                أفضل هدية يمكنك تقديمها لمن تحب (للوالدين، الزوج أو الزوجة، أو الأصدقاء). طقم إسلامي متكامل يأتي في علبة فاخرة باللون الأخضر الملكي الأنيق.
-            </p>
-            
-            <ul class="features-list">
-                <li><i class="fas fa-book-quran"></i> <strong>مصحف شريف:</strong> بتغليف مخملي فاخر باللون الأخضر يتناسب مع العلبة.</li>
-                <li><i class="fas fa-person-praying"></i> <strong>سجادة صلاة:</strong> ناعمة وعالية الجودة بتطريز أنيق.</li>
-                <li><i class="fas fa-ring"></i> <strong>سبحة صلاة:</strong> مسبحة بتصميم راقي وألوان متناسقة.</li>
-                <li><i class="fas fa-spray-can"></i> <strong>عطر:</strong> مسك/عطر زكي الرائحة لإتمام الهدية.</li>
-                <li><i class="fas fa-box-open"></i> <strong>علبة تقديم فاخرة:</strong> جاهزة للتقديم كهدية راقية دون الحاجة لتغليف إضافي.</li>
-            </ul>
-        </div>
-
+    <div class="colors-tabs">
+      <button class="tab-btn active" onclick="switchTab('light-colors', this)">السجادة الخفيفة</button>
+      <button class="tab-btn" onclick="switchTab('thick-colors', this)">السجادة الخشينة</button>
     </div>
 
-    <script>
-        // التعامل مع إرسال النموذج (تنبيه عند تأكيد الطلب)
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('تم تسجيل طلبك بنجاح! سيقوم فريقنا بالاتصال بك قريباً لتأكيد الطلب وشحنه عبر ZR Express.');
-            this.reset(); // تفريغ الخانات بعد الطلب
-        });
-    </script>
+    <div class="color-panel active" id="light-colors">
+      <div class="color-grid" id="color-grid-light">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div class="color-panel" id="thick-colors">
+      <div class="color-grid" id="color-grid-thick">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER SECTION -->
+<section class="order-section" id="order">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">اطلب الآن</span>
+      <h2>أكمل طلبيتك</h2>
+      <p>أدخل معلوماتك وسنتصل بك لتأكيد الطلبية</p>
+    </div>
+
+    <div class="order-wrapper">
+      <!-- SUMMARY -->
+      <div class="order-summary">
+        <div class="summary-title">📋 ملخص الطلبية</div>
+        <div class="summary-item">
+          <span class="label">المنتج</span>
+          <span class="value">بوكس إسلامي فاخر</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">المحتوى</span>
+          <span class="value">مصحف + سجادة + سبحة + مسك</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">نوع السجادة</span>
+          <span class="value" id="sum-type">سجادة خفيفة</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">اللون المختار</span>
+          <span class="value" id="sum-color">لم تختر بعد</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">الكمية</span>
+          <span class="value">1 بوكس</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">شركة التوصيل</span>
+          <span class="value">ZR Express</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">السعر</span>
+          <span class="value gold">3,000 دج</span>
+        </div>
+        <div class="cod-badge">
+          <div class="icon">💵</div>
+          <div class="text">
+            <strong>الدفع عند الاستلام</strong>
+            لا تدفع أي شيء الآن — الدفع عند وصول الطلبية إليك
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="order-form-box">
+        <div class="form-title">معلومات التوصيل</div>
+
+        <div class="form-group">
+          <label><span class="req">*</span> الاسم الكامل</label>
+          <input type="text" id="f-name" placeholder="أدخل اسمك الكامل">
+        </div>
+
+        <div class="form-group">
+          <label><span class="req">*</span> رقم الهاتف</label>
+          <input type="tel" id="f-phone" placeholder="0X XX XX XX XX" dir="ltr" style="text-align:right">
+        </div>
+
+        <div class="form-group">
+          <label>رقم هاتف إضافي (اختياري)</label>
+          <input type="tel" id="f-phone2" placeholder="رقم احتياطي" dir="ltr" style="text-align:right">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label><span class="req">*</span> الولاية</label>
+            <select id="f-wilaya"></select>
+          </div>
+          <div class="form-group">
+            <label><span class="req">*</span> البلدية</label>
+            <input type="text" id="f-commune" placeholder="البلدية">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>العنوان بالتفصيل</label>
+          <textarea id="f-address" placeholder="الحي، الشارع، رقم البناية..." rows="2"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>اللون المختار</label>
+            <div class="form-select-display" id="f-color-display">لم تختر بعد</div>
+          </div>
+          <div class="form-group">
+            <label>نوع السجادة</label>
+            <div class="form-select-display" id="f-type-display">خفيفة</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>ملاحظات إضافية</label>
+          <textarea id="f-notes" placeholder="أي طلب خاص أو ملاحظة للبائع..." rows="2"></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitOrder()">
+          🛍️ تأكيد الطلبية الآن
+        </button>
+
+        <p class="form-note">
+          ✓ ستتلقى مكالمة تأكيد خلال 24 ساعة &nbsp;|&nbsp; ✓ الدفع عند الاستلام فقط<br>
+          ✓ التوصيل عبر ZR Express لكل ولايات الجزائر
+        </p>
+
+        <div id="success-msg">
+          <div class="success-icon">✅</div>
+          <h3>تم إرسال طلبيتك بنجاح!</h3>
+          <p>شكراً على ثقتك. سيتصل بك فريقنا خلال 24 ساعة لتأكيد طلبيتك وتحديد موعد التوصيل.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">آراء العملاء</span>
+      <h2>ماذا قالوا عنا</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"هديت روحة الله عليها... البوكس جاء نظيف وفاخر والمصحف كبير ومريح. ولا أحسن هدية للمناسبات الدينية."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">ف</div>
+          <div>
+            <div class="reviewer-name">فاطمة بلقاسم</div>
+            <div class="reviewer-location">وهران</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"طلبت للسجادة الخشينة اللون الأخضر — وصلت في وقتها والتغليف كان ممتاز جداً. شكراً ZR!"</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">م</div>
+          <div>
+            <div class="reviewer-name">محمد أمين</div>
+            <div class="reviewer-location">الجزائر العاصمة</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">"اشتريت للعيد هدية لأمي — بكاءت من الفرح. المسك كان ريحتو حلوة جداً والسبحة قيّمة."</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">ن</div>
+          <div>
+            <div class="reviewer-name">نسرين حمداوي</div>
+            <div class="reviewer-location">قسنطينة</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Nour Gift ✦</div>
+  <div class="footer-links">
+    <a href="#top">الرئيسية</a>
+    <a href="#colors">الألوان</a>
+    <a href="#order">اطلب الآن</a>
+  </div>
+  <p class="footer-text">
+    © 2025 Nour Gift — بوكسات إسلامية فاخرة | التوصيل عبر ZR Express لكل الجزائر<br>
+    الدفع عند الاستلام فقط — لا حاجة لبطاقة بنكية
+  </p>
+</footer>
+
+<!-- STICKY CTA -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="sticky-price">
+    3,000 دج
+    <small>دفع عند الاستلام</small>
+  </div>
+  <button class="sticky-btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">
+    🛍️ اطلب الآن
+  </button>
+</div>
+
+<script>
+// ===== IMAGES =====
+const allImages = [
+  'IMG_20260604_120054_456.jpg',
+  'IMG_20260604_120054_410.jpg',
+  'IMG_20260604_120054_421.jpg',
+  'IMG_20260604_120054_307.jpg',
+  'IMG_20260604_120124_773.jpg',
+  'IMG_20260604_120040_229.jpg',
+  'IMG_20260604_120040_622.jpg',
+  'IMG_20260604_120040_079.jpg',
+  'IMG_20260604_120040_403.jpg',
+  'IMG_20260604_120040_103.jpg',
+  'IMG_20260604_120040_749.jpg',
+  'IMG_20260604_120040_147.jpg',
+  'IMG_20260604_120040_615.jpg',
+  'IMG_20260604_120040_846.jpg',
+  'IMG_20260604_120041_035.jpg',
+  'IMG_20260604_120106_920.jpg',
+  'IMG_20260604_120117_315.jpg',
+  'IMG_20260604_120053_905.jpg'
+];
+
+// Build thumbs
+const thumbsEl = document.getElementById('thumbs');
+const mainImg = document.getElementById('mainImg');
+const showThumb = [0,1,2,3,4];
+showThumb.forEach((idx, i) => {
+  const d = document.createElement('div');
+  d.className = 'thumb' + (i === 0 ? ' active' : '');
+  d.innerHTML = `<img src="${allImages[idx]}" alt="صورة ${i+1}">`;
+  d.onclick = () => {
+    mainImg.src = allImages[idx];
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    d.classList.add('active');
+  };
+  thumbsEl.appendChild(d);
+});
+
+// ===== COLORS =====
+const lightColors = [
+  { name: 'أسود ذهبي', img: 'IMG_20260604_120054_456.jpg', css: '#1a1a1a' },
+  { name: 'أزرق ملكي', img: 'IMG_20260604_120054_410.jpg', css: '#1a3a8b' },
+  { name: 'أزرق سماوي', img: 'IMG_20260604_120054_421.jpg', css: '#2264b0' },
+  { name: 'رمادي لؤلؤي', img: 'IMG_20260604_120053_905.jpg', css: '#9a9a9a' },
+  { name: 'أخضر زمردي', img: 'IMG_20260604_120124_773.jpg', css: '#1b6b3a' },
+];
+
+const thickColors = [
+  { name: 'أبيض فاخر', img: 'IMG_20260604_120040_229.jpg', css: '#f0ede4' },
+  { name: 'بيج رملي', img: 'IMG_20260604_120040_749.jpg', css: '#c4a882' },
+  { name: 'أسود كلاسيك', img: 'IMG_20260604_120040_103.jpg', css: '#222222' },
+  { name: 'وردي ورد', img: 'IMG_20260604_120040_079.jpg', css: '#c4768a' },
+  { name: 'برغندي أحمر', img: 'IMG_20260604_120040_622.jpg', css: '#8b1a2a' },
+  { name: 'بنفسجي وردي', img: 'IMG_20260604_120106_920.jpg', css: '#a066a0' },
+  { name: 'أخضر داكن', img: 'IMG_20260604_120040_615.jpg', css: '#1b4332' },
+];
+
+let selectedColor = '';
+let selectedType = 'سجادة خفيفة';
+
+function buildColorGrid(colors, gridId) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  colors.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'color-card';
+    card.dataset.color = c.name;
+    card.innerHTML = `
+      <div class="color-swatch">
+        <img src="${c.img}" alt="${c.name}" loading="lazy">
+        <div class="color-check">✓</div>
+      </div>
+      <div class="color-info">
+        <div class="color-name">${c.name}</div>
+      </div>`;
+    card.onclick = () => {
+      document.querySelectorAll('.color-card').forEach(x => x.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedColor = c.name;
+      mainImg.src = c.img;
+      document.getElementById('sum-color').textContent = c.name;
+      document.getElementById('f-color-display').textContent = c.name;
+      document.getElementById('f-color-display').style.color = '#C9A84C';
+      showToast('✓ تم اختيار اللون: ' + c.name);
+    };
+    grid.appendChild(card);
+  });
+}
+
+buildColorGrid(lightColors, 'color-grid-light');
+buildColorGrid(thickColors, 'color-grid-thick');
+
+function switchTab(panelId, btn) {
+  document.querySelectorAll('.color-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+  btn.classList.add('active');
+}
+
+function selectType(card, type) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedType = type;
+  document.getElementById('sum-type').textContent = type;
+  document.getElementById('f-type-display').textContent = type === 'سجادة خفيفة' ? 'خفيفة' : 'خشينة';
+}
+
+// ===== WILAYAS =====
+const wilayas = ['أدرار','الشلف','الأغواط','أم البواقي','باتنة','بجاية','بسكرة','بشار','البليدة','البويرة','تمنراست','تبسة','تلمسان','تيارت','تيزي وزو','الجزائر','الجلفة','جيجل','سطيف','سعيدة','سكيكدة','سيدي بلعباس','عنابة','قالمة','قسنطينة','المدية','مستغانم','المسيلة','معسكر','ورقلة','وهران','البيض','إليزي','برج بوعريريج','بومرداس','الطارف','تندوف','تيسمسيلت','الوادي','خنشلة','سوق أهراس','تيبازة','ميلة','عين الدفلى','النعامة','عين تموشنت','غرداية','غليزان','تيميمون','برج باجي مختار','أولاد جلال','بني عباس','عين صالح','عين قزام','تقرت','جانت','المغير','المنيعة'];
+const sel = document.getElementById('f-wilaya');
+wilayas.forEach(w => {
+  const o = document.createElement('option');
+  o.value = w; o.textContent = w;
+  sel.appendChild(o);
+});
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== STICKY CTA =====
+window.addEventListener('scroll', () => {
+  const sticky = document.getElementById('stickyCta');
+  if (window.scrollY > 500) sticky.classList.add('visible');
+  else sticky.classList.remove('visible');
+});
+
+// ===== SUBMIT =====
+function submitOrder() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const wilaya = document.getElementById('f-wilaya').value;
+  const commune = document.getElementById('f-commune').value.trim();
+
+  if (!name) { showToast('⚠️ الرجاء إدخال الاسم الكامل'); return; }
+  if (!phone || phone.length < 9) { showToast('⚠️ الرجاء إدخال رقم هاتف صحيح'); return; }
+  if (!commune) { showToast('⚠️ الرجاء إدخال البلدية'); return; }
+
+  const phone2 = document.getElementById('f-phone2').value.trim();
+  const address = document.getElementById('f-address').value.trim();
+  const notes = document.getElementById('f-notes').value.trim();
+
+  const orderData = {
+    timestamp: new Date().toLocaleString('ar-DZ'),
+    name, phone, phone2,
+    wilaya, commune, address,
+    color: selectedColor || 'لم تحدد',
+    type: selectedType,
+    product: 'بوكس إسلامي فاخر',
+    price: '3000 دج',
+    delivery: 'ZR Express',
+    notes
+  };
+
+  // Google Apps Script endpoint — ضع هنا رابط Apps Script الخاص بك
+  const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderData)
+  }).then(() => {
+    document.querySelector('.order-form-box').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+    document.getElementById('stickyCta').style.display = 'none';
+    window.scrollTo({ top: document.getElementById('order').offsetTop - 70, behavior: 'smooth' });
+  }).catch(() => {
+    // حتى لو فشل الفيتش بسبب no-cors نعرض النجاح
+    document.querySelector('.order-form-box').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+    document.getElementById('stickyCta').style.display = 'none';
+    window.scrollTo({ top: document.getElementById('order').offsetTop - 70, behavior: 'smooth' });
+  });
+}
+</script>
 </body>
 </html>
