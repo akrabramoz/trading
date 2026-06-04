@@ -3,24 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>معاينة محرك رسم الشموع وأدوات ICT</title>
+  <title>واجهة تداول وباك تيست متطورة</title>
   <script src="https://cdn.jsdelivr.net/npm/klinecharts/dist/klinecharts.min.js"></script>
   <style>
     :root {
       --bg: #050a0f;
       --surface: #0a1520;
+      --surface2: #0f1e2e;
       --border: #1a3a5c;
       --accent: #00d4ff;
       --text: #c8dde8;
+      --red: #ff4466;
+      --green: #00ff88;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
       background-color: var(--bg);
       color: var(--text);
-      font-family: sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      overflow: hidden;
     }
     header {
       background: var(--surface);
@@ -29,33 +33,50 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 60px;
     }
-    .main-container {
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      padding: 6px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #000;
+      border: none;
+    }
+    .main-layout {
       display: flex;
       flex: 1;
-      position: relative;
+      height: calc(100vh - 60px);
     }
-    /* شريط أدوات الرسم الجانبي */
     .toolbar {
-      width: 60px;
+      width: 55px;
       background: var(--surface);
       border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 10px 0;
-      gap: 12px;
+      gap: 10px;
     }
     .tool-btn {
       width: 40px;
       height: 40px;
-      background: #0f1e2e;
+      background: var(--surface2);
       border: 1px solid var(--border);
       color: var(--text);
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-      font-size: 12px;
+      font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -65,61 +86,67 @@
       color: #000;
       border-color: var(--accent);
     }
-    /* حاوية الشارت الأساسية */
-    #chart {
+    #chart_container {
       flex: 1;
       height: 100%;
+      background: var(--bg);
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h3>منصة اختبار أدوات الرسم والمحاكاة المخصصة</h3>
-    <div>الزوج الافتراضي: XAUUSD</div>
+    <h2>منصة المحاكاة وأدوات الرسم الاحترافية</h2>
+    <div class="controls">
+      <button class="btn btn-accent" onclick="nextBar()">الشمعة التالية ➡️</button>
+      <button class="btn" onclick="resetBacktest()">إعادة ضبط 🔄</button>
+    </div>
   </header>
 
-  <div class="main-container">
+  <div class="main-layout">
     <div class="toolbar">
-      <button class="tool-btn" onclick="setShape('trendLine')" title="خط اتجاه">📈</button>
-      <button class="tool-btn" onclick="setShape('horizontalLine')" title="خط أفقي">➖</button>
-      <button class="tool-btn" onclick="setShape('rect')" title="منطقة FVG / OrderBlock">🟩</button>
-      <button class="tool-btn" onclick="setShape('fibonacciRetracement')" title="مستويات الفيبوناتشي">🎯</button>
-      <button class="tool-btn" onclick="clearShapes()" title="مسح الرسومات" style="background: #ff446622; color: #ff4466;">❌</button>
+      <button class="tool-btn" onclick="setActiveTool(this, 'trendLine')" title="خط اتجاه">📈</button>
+      <button class="tool-btn" onclick="setActiveTool(this, 'horizontalLine')" title="خط أفقي">➖</button>
+      <button class="tool-btn" onclick="setActiveTool(this, 'rect')" title="مستطيل (Order Block / FVG)">🟩</button>
+      <button class="tool-btn" onclick="setActiveTool(this, 'fibonacciRetracement')" title="مستويات الفيبوناتشي">🎯</button>
+      <button class="tool-btn" onclick="clearAllShapes()" title="مسح الرسومات" style="color: var(--red);">❌</button>
     </div>
 
-    <div id="chart"></div>
+    <div id="chart_container"></div>
   </div>
 
   <script>
     let chart;
+    let fullDataset = [];
+    let visibleDataCount = 35; 
+    let currentIndex = 0;
 
-    // 1. توليد بيانات شموع وهمية مسبقة لملء الشارت فوراً
-    function generateMockData() {
+    // توليد بيانات هيكلية دقيقة تحاكي حركة الذهب
+    function generateTechnicalData() {
       const data = [];
-      let basePrice = 2320;
-      let timestamp = Date.now() - 100 * 60 * 15 * 1000;
+      let price = 2320.0;
+      let time = Date.now() - 200 * 15 * 60 * 1000;
       
-      for (let i = 0; i < 100; i++) {
-        const open = basePrice + (Math.random() - 0.5) * 10;
-        const close = open + (Math.random() - 0.4) * 12;
-        const high = Math.max(open, close) + Math.random() * 5;
-        const low = Math.min(open, close) - Math.random() * 5;
+      for (let i = 0; i < 150; i++) {
+        const change = (Math.random() - 0.48) * 8;
+        const open = price;
+        const close = price + change;
+        const high = Math.max(open, close) + Math.random() * 3;
+        const low = Math.min(open, close) - Math.random() * 3;
         
-        data.push({ timestamp, open, high, low, close, volume: Math.random() * 1000 });
-        basePrice = close;
-        timestamp += 15 * 60 * 1000; // فريم 15 دقيقة
+        data.push({ timestamp: time, open, high, low, close, volume: Math.random() * 500 });
+        price = close;
+        time += 15 * 60 * 1000;
       }
       return data;
     }
 
-    // 2. تهيئة وتخصيص محرك الشارت بالألوان الداكنة
+    // تهيئة الشارت وتخصيصه بالكامل بالثيم المظلم
     function initChart() {
-      chart = klinecharts.init('chart');
+      chart = klinecharts.init('chart_container');
       
-      // تطبيق الثيم المظلم بالكامل
       chart.setStyles({
-        grid: { show: true, horizontal: { color: '#1a3a5c' }, vertical: { color: '#1a3a5c' } },
+        grid: { show: true, horizontal: { color: '#142535' }, vertical: { color: '#142535' } },
         candle: {
           type: 'candle_solid',
           bar: { upColor: '#00ff88', downColor: '#ff4466' },
@@ -127,30 +154,49 @@
         }
       });
 
-      // ضخ البيانات داخل المحرك لتظهر الشموع فوراً
-      const mockData = generateMockData();
-      chart.applyNewData(mockData);
+      fullDataset = generateTechnicalData();
+      resetBacktest();
     }
 
-    // 3. تفعيل أداة الرسم المحددة عند النقر على الزر الجانبي
-    function setShape(shapeName) {
-      // إخبار المحرك بالتقاط النقرة القادمة من الفأرة على الكانفاس ورسم الأداة
+    // إعادة تعيين الباك تيست لعرض الشموع الأولى فقط وإخفاء المستقبل
+    function resetBacktest() {
+      currentIndex = visibleDataCount;
+      const initialData = fullDataset.slice(0, currentIndex);
+      chart.applyNewData(initialData);
+    }
+
+    // حقن الشمعة التالية (محاكاة Bar Replay لـ TradingView)
+    function nextBar() {
+      if (currentIndex >= fullDataset.length) {
+        alert("انتهت البيانات التاريخية المتاحة.");
+        return;
+      }
+      const bar = fullDataset[currentIndex];
+      chart.updateData(bar);
+      currentIndex++;
+    }
+
+    // تفعيل أداة الرسم المحددة والتقاط إحداثيات الماوس على الكانفاس
+    function setActiveTool(button, toolName) {
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+
       chart.createOverlay({
-        name: shapeName,
+        name: toolName,
         lock: false,
         styles: {
           line: { color: '#00d4ff', size: 2 },
-          polygon: { color: 'rgba(0, 212, 255, 0.15)' }
+          polygon: { color: 'rgba(0, 212, 255, 0.12)' }
         }
       });
     }
 
-    // 4. دالة مسح كافة الرسومات من فوق الشارت
-    function clearShapes() {
+    // مسح كافة الرسومات من فوق الشارت
+    function clearAllShapes() {
       chart.removeOverlay();
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
     }
 
-    // تشغيل المحرك تلقائياً عند فتح الملف
     window.onload = initChart;
   </script>
 </body>
