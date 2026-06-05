@@ -1,364 +1,56 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAUUSD Backtest Platform</title>
 
-<style>
+    <title>TradingView Charting Library demo -- Mobile (black)</title>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI,Tahoma,sans-serif;
-}
+    <!-- Fix for iOS Safari zooming bug -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-body{
-    overflow:hidden;
-    background:#ffffff;
-}
+    <script type="text/javascript" src="charting_library/charting_library.min.js"></script>
+    <script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
+    <script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
 
-/* ==========================
-   TOP HEADER
-========================== */
+    <script type="text/javascript">
 
-.top-header{
-    height:56px;
-    border-bottom:1px solid #e5e5e5;
-    background:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 12px;
-}
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
 
-.header-left,
-.header-center,
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
+        TradingView.onready(function () {
+            var widget = new TradingView.widget({
+                fullscreen: true,
+                symbol: 'AAPL',
+                interval: 'D',
+                container_id: "tv_chart_container",
+                //	BEWARE: no trailing slash is expected in feed URL
+                datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
+                library_path: "charting_library/",
+                locale: getParameterByName('lang') || "en",
+                //	Regression Trend-related functionality is not implemented yet, so it's hidden for a while
+                drawings_access: {type: 'black', tools: [{name: "Regression Trend"}]},
+                disabled_features: ["use_localstorage_for_settings"],
+                preset: "mobile",
+                overrides: {
+                    "paneProperties.background": "#222222",
+                    "paneProperties.vertGridProperties.color": "#454545",
+                    "paneProperties.horzGridProperties.color": "#454545",
+                    "symbolWatermarkProperties.transparency": 90,
+                    "scalesProperties.textColor": "#AAA"
+                }
+            });
+        })
 
-.avatar{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:#d9d9d9;
-}
+    </script>
 
-.btn{
-    height:34px;
-    padding:0 14px;
-    border-radius:8px;
-    border:1px solid #dcdcdc;
-    background:#fff;
-    cursor:pointer;
-}
-
-/* ==========================
-   MAIN LAYOUT
-========================== */
-
-.main-layout{
-    height:calc(100vh - 56px - 34px);
-    display:flex;
-}
-
-/* ==========================
-   LEFT TOOLBAR
-========================== */
-
-.left-toolbar{
-    width:60px;
-    border-left:1px solid #e5e5e5;
-    background:#fff;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding-top:12px;
-    gap:14px;
-}
-
-.tool{
-    width:28px;
-    height:28px;
-    border-radius:4px;
-    border:1px solid #dcdcdc;
-}
-
-/* ==========================
-   CHART SECTION
-========================== */
-
-.chart-wrapper{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-}
-
-/* timeframe bar */
-
-.timeframe-bar{
-    height:44px;
-    border-bottom:1px solid #ececec;
-    display:flex;
-    align-items:center;
-    gap:18px;
-    padding:0 18px;
-    background:#fff;
-}
-
-.timeframe{
-    font-size:14px;
-    color:#333;
-}
-
-/* drawing toolbar */
-
-.drawing-bar{
-    height:48px;
-    border-bottom:1px solid #ececec;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:0 16px;
-    background:#fff;
-}
-
-.draw-btn{
-    width:26px;
-    height:26px;
-    border:1px solid #d8d8d8;
-}
-
-/* chart */
-
-.chart-area{
-    flex:1;
-    position:relative;
-    background:#ffffff;
-}
-
-/* price scale */
-
-.price-scale{
-    position:absolute;
-    right:0;
-    top:0;
-    width:72px;
-    height:100%;
-    border-right:1px solid #ececec;
-    background:#fff;
-}
-
-.price-level{
-    position:absolute;
-    right:8px;
-    font-size:12px;
-    color:#666;
-}
-
-/* ==========================
-   WATCHLIST
-========================== */
-
-.watchlist{
-    width:260px;
-    border-right:1px solid #e5e5e5;
-    background:#fafafa;
-    display:flex;
-    flex-direction:column;
-}
-
-.watch-header{
-    height:50px;
-    border-bottom:1px solid #e5e5e5;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 12px;
-}
-
-.watch-row{
-    height:38px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 12px;
-    border-bottom:1px solid #f0f0f0;
-    font-size:14px;
-}
-
-/* ==========================
-   RIGHT SIDEBAR
-========================== */
-
-.right-sidebar{
-    width:60px;
-    border-right:1px solid #e5e5e5;
-    background:#fff;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:18px;
-    padding-top:14px;
-}
-
-.side-icon{
-    width:28px;
-    height:28px;
-    border:1px solid #d8d8d8;
-    border-radius:4px;
-}
-
-/* ==========================
-   FOOTER
-========================== */
-
-.footer{
-    height:34px;
-    border-top:1px solid #e5e5e5;
-    background:#fff;
-    display:flex;
-    align-items:center;
-    gap:18px;
-    padding:0 12px;
-    font-size:13px;
-}
-
-</style>
 </head>
 
-<body>
-
-<header class="top-header">
-
-    <div class="header-right">
-        <div class="avatar"></div>
-        <button class="btn">نشر</button>
-        <button class="btn">تداول</button>
-    </div>
-
-    <div class="header-center">
-        <strong>XAUUSD</strong>
-        <span>4477.620</span>
-        <span style="color:#00aa66">0.96%</span>
-    </div>
-
-    <div class="header-left">
-        <button class="btn">📷</button>
-        <button class="btn">⚙</button>
-    </div>
-
-</header>
-
-<div class="main-layout">
-
-    <aside class="right-sidebar">
-
-        <div class="side-icon"></div>
-        <div class="side-icon"></div>
-        <div class="side-icon"></div>
-        <div class="side-icon"></div>
-        <div class="side-icon"></div>
-        <div class="side-icon"></div>
-        <div class="side-icon"></div>
-
-    </aside>
-
-    <section class="watchlist">
-
-        <div class="watch-header">
-            <span>رمز</span>
-            <span>%</span>
-        </div>
-
-        <div class="watch-row"><span>EURUSD</span><span>0.19%</span></div>
-        <div class="watch-row"><span>GBPUSD</span><span>0.07%</span></div>
-        <div class="watch-row"><span>USDJPY</span><span>-0.06%</span></div>
-        <div class="watch-row"><span>AUDUSD</span><span>0.16%</span></div>
-        <div class="watch-row"><span>USDCAD</span><span>0.03%</span></div>
-        <div class="watch-row"><span>NZDUSD</span><span>0.27%</span></div>
-        <div class="watch-row"><span>XAUUSD</span><span>0.96%</span></div>
-        <div class="watch-row"><span>BTCUSD</span><span>-0.92%</span></div>
-
-    </section>
-
-    <section class="chart-wrapper">
-
-        <div class="timeframe-bar">
-            <span class="timeframe">1 دقيقة</span>
-            <span class="timeframe">3 دقائق</span>
-            <span class="timeframe">5 دقائق</span>
-            <span class="timeframe">15 دقيقة</span>
-            <span class="timeframe">1 ساعة</span>
-            <span class="timeframe">4 ساعات</span>
-            <span class="timeframe">يوم</span>
-            <span class="timeframe">أسبوع</span>
-            <span class="timeframe">شهر</span>
-        </div>
-
-        <div class="drawing-bar">
-
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-            <div class="draw-btn"></div>
-
-        </div>
-
-        <div class="chart-area">
-
-            <div class="price-scale">
-
-                <div class="price-level" style="top:40px;">4516</div>
-                <div class="price-level" style="top:140px;">4511</div>
-                <div class="price-level" style="top:240px;">4506</div>
-                <div class="price-level" style="top:340px;">4501</div>
-                <div class="price-level" style="top:440px;">4496</div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <aside class="left-toolbar">
-
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-        <div class="tool"></div>
-
-    </aside>
-
-</div>
-
-<footer class="footer">
-
-    <span>يوم</span>
-    <span>5 أيام</span>
-    <span>1 شهر</span>
-    <span>3 أشهر</span>
-    <span>6 أشهر</span>
-    <span>YTD</span>
-    <span>1 سنة</span>
-    <span>5 سنوات</span>
-    <span>كل</span>
-
-</footer>
-
+<body style="margin:0px;">
+<div id="tv_chart_container"></div>
 </body>
+
 </html>
